@@ -130,7 +130,7 @@
 		</font>
 		<span id="translation">
 		<?php
-			echo "Translated text here.";
+			//echo "Translated text here.";
 			function getHTML($url,$timeout)
 			{
 			       $ch = curl_init($url); // initialize curl with given url
@@ -143,12 +143,20 @@
 			}
 			function idoepo($message)
 			{
-				preg_replace("/ĥ/", "h", $message);
-				preg_replace("/[ĝĵ]/", "j", $message);
-				preg_replace("/ĉ/", "ch", $message);
-				preg_replace("/ŭ/", "w", $message);
-				preg_replace("/ŝ/", "sh", $message);
-				preg_replace("/a/", "b", $message);
+				// $message = preg_replace("/ĥ/", "h", $message);
+				// $message = preg_replace("/[ĝĵ]/", "j", $message);
+				// $message = preg_replace("/ĉ/", "ch", $message);
+				// $message = preg_replace("/ŭ/", "w", $message);
+				// $message = preg_replace("/ŝ/", "sh", $message);
+				$words = preg_split("/ /", $message);
+				foreach($words as &$word)
+				{
+					$html = getHTML("https://glosbe.com/io/eo/$word", 5);
+					preg_match("/phr\">\w+<\/strong/", $message, $matches);
+					print_r($matches);
+					$newword = $matches[0][0]; 
+					preg_replace($word, $newword, $message);
+				}
 				echo $message;
 			}
 			function epoido($message)
@@ -159,11 +167,25 @@
 			function tkpepo($message)
 			{
 				$original = $message;
-				preg_replace('/anu seme\./', 'or what?', $message);
-				preg_replace('/kin\./', 'as well.', $message);
+				$new = "";
+				if(preg_match('/anu seme\./', $original))
+				{
+					$new = "ĉu ".$new;
+				}
+				if(preg_match('/kin\./', $original))
+				{
+					$new = $new.' tiel';
+				}
 				preg_match('/[A-Z]\w*(?=[ \.,;\n])/', $message, $matches);
 				print_r($matches);
-				preg_replace('/jan [A-Z]\w*(?= )/', $matches[0][0], $message);
+				$message = preg_replace('/jan [A-Z]\w*(?= )/', $matches[0][0], $message);
+				$subject = substr($message, 0, strpos($message, ' li '));
+				$object = substr($message, strpos($message, ' e ')+3);
+				$subjectwords = preg_split("/ /", $subject);
+				foreach($subjectwords as &$word)
+				{
+
+				}
 				echo $message;
 			}
 			function epotkp($message)
@@ -228,6 +250,7 @@
 		<a href="http://tokipona.org/">Official Site</a><br>
 		<a href="http://rowa.giso.de/languages/toki-pona/english/latex/index.html">Lessons</a><br>
 		<a href="https://aiki.pbworks.com/f/TP+words.pdf">Word List</a><br>
+		<a href="https://docs.google.com/spreadsheets/d/12gDr-zsUuwwCWPme9DlAE0JWuFDAFrqh3_IA257ff1U/edit#gid=0">Compound Word List</a><br>
 		<a href="http://tokipona.net/tp/default.aspx">Other Resources</a><br><br>
 
 		<p class="langname"><img src="ido.png" alt="Flag of Ido" class="langimg">Ido</p>
@@ -235,9 +258,7 @@
 		<a href="http://interlanguages.net/yindex.html">Resources 1</a><br>
 		<a href="http://idolinguo.org.uk/">Resources 2</a><br>
 	</div>
-	 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>
