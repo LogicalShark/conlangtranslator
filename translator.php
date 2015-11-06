@@ -101,29 +101,17 @@
 		<button accesskey=s id="s" onClick="addS()" type="button">ŝ</button>
 		<script>
 			function addH()
-			{
-				document.getElementById("message").value = (document.getElementById("message").value).concat("ĥ");
-			}
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("ĥ");}
 			function addG()
-			{
-				document.getElementById("message").value = (document.getElementById("message").value).concat("ĝ");
-			}
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("ĝ");}
 			function addJ()
-			{
-				document.getElementById("message").value = (document.getElementById("message").value).concat("ĵ");
-			}
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("ĵ");}
 			function addC()
-			{
-				document.getElementById("message").value = (document.getElementById("message").value).concat("ĉ");
-			}
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("ĉ");}
 			function addU()
-			{
-				document.getElementById("message").value = (document.getElementById("message").value).concat("ŭ");
-			}
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("ŭ");}
 			function addS()
-			{
-				document.getElementById("message").value = (document.getElementById("message").value).concat("ŝ");
-			}
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("ŝ");}
 		</script>
 		<input type="submit" value="Submit" name="submit" style="padding:30x;">
 		</form>
@@ -143,25 +131,111 @@
 			}
 			function idoepo($message)
 			{
-				// $message = preg_replace("/ĥ/", "h", $message);
-				// $message = preg_replace("/[ĝĵ]/", "j", $message);
-				// $message = preg_replace("/ĉ/", "ch", $message);
-				// $message = preg_replace("/ŭ/", "w", $message);
-				// $message = preg_replace("/ŝ/", "sh", $message);
+				$original = $message;
+				//Replace noun plural -i with -oj
+				$message = preg_replace("/i /", "oj ", $message);
+				$message = preg_replace("/i;/", "oj;", $message);
+				$message = preg_replace("/i,/", "oj,", $message);
+				$message = preg_replace("/i\./", "oj\.", $message);
+				$message = preg_replace("/i\Z/", "oj\Z", $message);
+				$message = preg_replace("/i\"/", "oj\"", $message);
+				$message = preg_replace("/i\'/", "oj\'", $message);
+
+				//Comparatives and superlatives are covered by the word replacement
+				
+				//Replace verb inperative ending -ez with -u
+				$message = preg_replace("/ez /", "u ", $message);
+				$message = preg_replace("/ez;/", "u;", $message);
+				$message = preg_replace("/ez,/", "u,", $message);
+				$message = preg_replace("/ez\./", "u\.", $message);
+				$message = preg_replace("/ez\Z/", "u\Z", $message);
+				$message = preg_replace("/ez\"/", "u\"", $message);
+				$message = preg_replace("/ez\'/", "u\'", $message);
+
+
+				//Replace verb infinitive ending -ar with -i
+				$message = preg_replace("/ar /", "i ", $message);
+				$message = preg_replace("/ar;/", "i;", $message);
+				$message = preg_replace("/ar,/", "i,", $message);
+				$message = preg_replace("/ar\./", "i\.", $message);
+				$message = preg_replace("/ar\Z/", "i\Z", $message);
+				$message = preg_replace("/ar\"/", "i\"", $message);
+				$message = preg_replace("/ar\'/", "i\'", $message);
+
+				//Replace verb participle endings .nta with .nt
+				$message = preg_replace("/anta /", "ant ", $message);
+				$message = preg_replace("/anta;/", "ant;", $message);
+				$message = preg_replace("/anta,/", "ant,", $message);
+				$message = preg_replace("/anta\./", "ant\.", $message);
+				$message = preg_replace("/anta\Z/", "ant\Z", $message);
+				$message = preg_replace("/anta\"/", "ant\"", $message);
+				$message = preg_replace("/anta\'/", "ant\'", $message);
+				$message = preg_replace("/inta /", "int ", $message);
+				$message = preg_replace("/inta;/", "int;", $message);
+				$message = preg_replace("/inta,/", "int,", $message);
+				$message = preg_replace("/inta\./", "int\.", $message);
+				$message = preg_replace("/inta\Z/", "int\Z", $message);
+				$message = preg_replace("/inta\"/", "int\"", $message);
+				$message = preg_replace("/inta\'/", "int\'", $message);
+				$message = preg_replace("/onta /", "ont ", $message);
+				$message = preg_replace("/onta;/", "ont;", $message);
+				$message = preg_replace("/onta,/", "ont,", $message);
+				$message = preg_replace("/onta\./", "ont\.", $message);
+				$message = preg_replace("/onta\Z/", "ont\Z", $message);
+				$message = preg_replace("/onta\"/", "ont\"", $message);
+				$message = preg_replace("/onta\'/", "ont\'", $message);
+
+				
+
+				//Split into words
 				$words = preg_split("/ /", $message);
 				foreach($words as &$word)
 				{
-					$html = getHTML("https://glosbe.com/io/eo/$word", 5);
-					preg_match("/phr\">\w+<\/strong/", $message, $matches);
-					print_r($matches);
-					$newword = $matches[0][0]; 
-					preg_replace($word, $newword, $message);
+					$extras = "";
+					if(strpos($word, ',')>=0)
+					{
+						$w = substr($word, 0, strlen($word)-1);
+						$extras=',';
+					}
+					if(strpos($word, ';')>=0)
+					{
+						$w = substr($word, 0, strlen($word)-1);			
+						$extras=';';
+					}
+					if(strpos($word, '\"')>=0)
+					{
+						$w = substr($word, 0, strlen($word)-1);			
+						$extras='\"';
+					}
+					if(strpos($word, ':')>=0)
+					{
+						$w = substr($word, 0, strlen($word)-1);			
+						$extras=':';
+					}
+					if(strpos($word, '\n')>=0)
+					{
+						$w = substr($word, 0, strlen($word)-1);			
+					}
+					else
+						$w = $word;
+					echo $w;
+					$html = getHTML("https://glosbe.com/io/eo/$w", 5);
+					preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches);
+					$message = preg_replace("/ $word/.", " $matches[2] ", $message);
 				}
+				
 				echo $message;
 			}
 			function epoido($message)
 			{
 				$original = $message;
+				//Replace special characters
+				$message = preg_replace("/ĥ/", "h", $message);
+				$message = preg_replace("/[ĝĵ]/", "j", $message);
+				$message = preg_replace("/ĉ/", "ch", $message);
+				$message = preg_replace("/ŭ/", "w", $message);
+				$message = preg_replace("/ŝ/", "sh", $message);
+
 				echo $message;
 			}
 			function tkpepo($message)
@@ -193,11 +267,11 @@
 				$original = $message;
 				echo $message;
 			}
-			$word = "parallel";
-			$html=getHTML("http://www.thesaurus.com/browse/{$word}?s=t", 10);
-			preg_match_all('/class="text">(\w+)<(?=(.*container-info antonyms))/', $html, $matches);
-			for($x = 0; $x<sizeof($matches[1]); $x++)
-				echo $matches[1][$x]."\n";
+			// $word = "parallel";
+			// $html=getHTML("http://www.thesaurus.com/browse/{$word}?s=t", 10);
+			// preg_match_all('/class="text">(\w+)<(?=(.*container-info antonyms))/', $html, $matches);
+			//for($x = 0; $x<sizeof($matches[1]); $x++)
+				//echo $matches[1][$x]."\n";
 			if(isset($_POST['submit']))
 			{
 				$message = $_POST["message"];
@@ -227,9 +301,9 @@
 					break;
 					default: $translatecode.="nat";
 				}
-				if($_POST['starter']==$_POST['target'])
-					echo $message;
-				else
+				//if($_POST['starter']==$_POST['target'])
+					//echo $message;
+				//else
 					$translatecode($message);
 			}
 		?>
