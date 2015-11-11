@@ -54,7 +54,7 @@
 
 	#message {padding: 1px;}
 
-	#translation {
+	#output {
 		max-width: 350px;
 		padding: 1px;
 		border: 3px solid gray;
@@ -75,31 +75,37 @@
 	</div>
 	<font face="courier">
 	<div id="translator">
-		<form method="POST">
 		<h1>Translator</h1><br>
-		<select name="starter" size="1">
-		  <option>toki pona</option>
-		  <option>English</option>
-		  <option>Esperanto</option>
-		  <option>Ido</option>
-		  <option>Interlingua</option>
-		</select>
-		<input type="text" id="message" name="message" size="20" style="padding: 1px;">
-		<br>to<br>
-		<select name="target" size="1">
-		  <option>toki pona</option>
-		  <option>English</option>
-		  <option>Esperanto</option>
-		  <option>Ido</option>
-		  <option>Interlingua</option>
-		</select>
-		<button accesskey=h id="h" onClick="addH()" type="button">ĥ</button>
-		<button accesskey=g id="g" onClick="addG()" type="button">ĝ</button>
-		<button accesskey=j id="j" onClick="addJ()" type="button">ĵ</button>
+		<form method="POST" id="query">		
+		<textarea rows="5" cols="40" id="message" name="message" size="20" style="padding: 1px;">Input here</textarea>
+		<br>
+
 		<button accesskey=c id="c" onClick="addC()" type="button">ĉ</button>
-		<button accesskey=u id="u" onClick="addU()" type="button">ŭ</button>
+		<button accesskey=g id="g" onClick="addG()" type="button">ĝ</button>
+		<button accesskey=h id="h" onClick="addH()" type="button">ĥ</button>
+		<button accesskey=j id="j" onClick="addJ()" type="button">ĵ</button>
 		<button accesskey=s id="s" onClick="addS()" type="button">ŝ</button>
-		<script>
+		<button accesskey=u id="u" onClick="addU()" type="button">ŭ</button>		
+		<br><br>
+
+		<select name="starter" id="starter" size="1">
+		  <option>toki pona</option>
+		  <option>English</option>
+		  <option>Esperanto</option>
+		  <option selected="selected">Ido</option>
+		  <option>Interlingua</option>
+		</select>
+		<br>to<br>
+		<select name="target" id="target" size="1">
+		  <option>toki pona</option>
+		  <option>English</option>
+		  <option selected="selected">Esperanto</option>
+		  <option>Ido</option>
+		  <option>Interlingua</option>
+		</select>
+		</form>
+		<script type="text/javascript">
+			//Adding Esperanto-specific characters
 			function addH()
 			{document.getElementById("message").value = (document.getElementById("message").value).concat("ĥ");}
 			function addG()
@@ -113,205 +119,16 @@
 			function addS()
 			{document.getElementById("message").value = (document.getElementById("message").value).concat("ŝ");}
 		</script>
-		<input type="submit" value="Submit" name="submit" style="padding:30x;">
-		</form>
+		<input type="submit" value="Submit" name="submit" id="submit">
+		<br>
 		</font>
-		<span id="translation">
-		<?php
-			//echo "Translated text here.";
-			function getHTML($url,$timeout)
-			{
-			       $ch = curl_init($url); // initialize curl with given url
-			       curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER["HTTP_USER_AGENT"]); // set  useragent
-			       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // write the response to a variable
-			       curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // follow redirects if any
-			       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout); // max. seconds to execute
-			       curl_setopt($ch, CURLOPT_FAILONERROR, 1); // stop when it encounters an error
-			       return @curl_exec($ch);
-			}
-			function idoepo($message)
-			{
-				$original = $message;
-				//Replace noun plural -i with -oj
-				$message = preg_replace("/i /", "oj ", $message);
-				$message = preg_replace("/i;/", "oj;", $message);
-				$message = preg_replace("/i,/", "oj,", $message);
-				$message = preg_replace("/i\./", "oj\.", $message);
-				$message = preg_replace("/i\Z/", "oj\Z", $message);
-				$message = preg_replace("/i\"/", "oj\"", $message);
-				$message = preg_replace("/i\'/", "oj\'", $message);
-
-				//Comparatives and superlatives are covered by the word replacement
-				
-				//Replace verb inperative ending -ez with -u
-				$message = preg_replace("/ez /", "u ", $message);
-				$message = preg_replace("/ez;/", "u;", $message);
-				$message = preg_replace("/ez,/", "u,", $message);
-				$message = preg_replace("/ez\./", "u\.", $message);
-				$message = preg_replace("/ez\Z/", "u\Z", $message);
-				$message = preg_replace("/ez\"/", "u\"", $message);
-				$message = preg_replace("/ez\'/", "u\'", $message);
-
-
-				//Replace verb infinitive ending -ar with -i
-				$message = preg_replace("/ar /", "i ", $message);
-				$message = preg_replace("/ar;/", "i;", $message);
-				$message = preg_replace("/ar,/", "i,", $message);
-				$message = preg_replace("/ar\./", "i\.", $message);
-				$message = preg_replace("/ar\Z/", "i\Z", $message);
-				$message = preg_replace("/ar\"/", "i\"", $message);
-				$message = preg_replace("/ar\'/", "i\'", $message);
-
-				//Replace verb participle endings .nta with .nt
-				$message = preg_replace("/anta /", "ant ", $message);
-				$message = preg_replace("/anta;/", "ant;", $message);
-				$message = preg_replace("/anta,/", "ant,", $message);
-				$message = preg_replace("/anta\./", "ant\.", $message);
-				$message = preg_replace("/anta\Z/", "ant\Z", $message);
-				$message = preg_replace("/anta\"/", "ant\"", $message);
-				$message = preg_replace("/anta\'/", "ant\'", $message);
-				$message = preg_replace("/inta /", "int ", $message);
-				$message = preg_replace("/inta;/", "int;", $message);
-				$message = preg_replace("/inta,/", "int,", $message);
-				$message = preg_replace("/inta\./", "int\.", $message);
-				$message = preg_replace("/inta\Z/", "int\Z", $message);
-				$message = preg_replace("/inta\"/", "int\"", $message);
-				$message = preg_replace("/inta\'/", "int\'", $message);
-				$message = preg_replace("/onta /", "ont ", $message);
-				$message = preg_replace("/onta;/", "ont;", $message);
-				$message = preg_replace("/onta,/", "ont,", $message);
-				$message = preg_replace("/onta\./", "ont\.", $message);
-				$message = preg_replace("/onta\Z/", "ont\Z", $message);
-				$message = preg_replace("/onta\"/", "ont\"", $message);
-				$message = preg_replace("/onta\'/", "ont\'", $message);
-
-				
-
-				//Split into words
-				$words = preg_split("/ /", $message);
-				foreach($words as &$word)
-				{
-					$extras = "";
-					if(strpos($word, ',')>=0)
-					{
-						$w = substr($word, 0, strlen($word)-1);
-						$extras=',';
-					}
-					if(strpos($word, ';')>=0)
-					{
-						$w = substr($word, 0, strlen($word)-1);			
-						$extras=';';
-					}
-					if(strpos($word, '\"')>=0)
-					{
-						$w = substr($word, 0, strlen($word)-1);			
-						$extras='\"';
-					}
-					if(strpos($word, ':')>=0)
-					{
-						$w = substr($word, 0, strlen($word)-1);			
-						$extras=':';
-					}
-					if(strpos($word, '\n')>=0)
-					{
-						$w = substr($word, 0, strlen($word)-1);			
-					}
-					else
-						$w = $word;
-					echo $w;
-					$html = getHTML("https://glosbe.com/io/eo/$w", 5);
-					preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches);
-					$message = preg_replace("/ $word/.", " $matches[2] ", $message);
-				}
-				
-				echo $message;
-			}
-			function epoido($message)
-			{
-				$original = $message;
-				//Replace special characters
-				$message = preg_replace("/ĥ/", "h", $message);
-				$message = preg_replace("/[ĝĵ]/", "j", $message);
-				$message = preg_replace("/ĉ/", "ch", $message);
-				$message = preg_replace("/ŭ/", "w", $message);
-				$message = preg_replace("/ŝ/", "sh", $message);
-
-				echo $message;
-			}
-			function tkpepo($message)
-			{
-				$original = $message;
-				$new = "";
-				if(preg_match('/anu seme\./', $original))
-				{
-					$new = "ĉu ".$new;
-				}
-				if(preg_match('/kin\./', $original))
-				{
-					$new = $new.' tiel';
-				}
-				preg_match('/[A-Z]\w*(?=[ \.,;\n])/', $message, $matches);
-				print_r($matches);
-				$message = preg_replace('/jan [A-Z]\w*(?= )/', $matches[0][0], $message);
-				$subject = substr($message, 0, strpos($message, ' li '));
-				$object = substr($message, strpos($message, ' e ')+3);
-				$subjectwords = preg_split("/ /", $subject);
-				foreach($subjectwords as &$word)
-				{
-
-				}
-				echo $message;
-			}
-			function epotkp($message)
-			{
-				$original = $message;
-				echo $message;
-			}
-			// $word = "parallel";
-			// $html=getHTML("http://www.thesaurus.com/browse/{$word}?s=t", 10);
-			// preg_match_all('/class="text">(\w+)<(?=(.*container-info antonyms))/', $html, $matches);
-			//for($x = 0; $x<sizeof($matches[1]); $x++)
-				//echo $matches[1][$x]."\n";
-			if(isset($_POST['submit']))
-			{
-				$message = $_POST["message"];
-				//tkp toki pona; epo esperanto; ido ido; interlingua ila; nat natural
-				$translatecode = "";
-				switch($_POST['starter'])
-				{
-					case "toki pona": $translatecode.="tkp";
-					break;
-					case "Esperanto": $translatecode.="epo";
-					break;
-					case "Interlingua": $translatecode.="ila";
-					break;
-					case "Ido": $translatecode.="ido";
-					break;
-					default: $translatecode.="nat";
-				}
-				switch($_POST['target'])
-				{
-					case "toki pona": $translatecode.="tkp";
-					break;
-					case "Esperanto": $translatecode.="epo";
-					break;
-					case "Interlingua": $translatecode.="ila";
-					break;
-					case "Ido": $translatecode.="ido";
-					break;
-					default: $translatecode.="nat";
-				}
-				//if($_POST['starter']==$_POST['target'])
-					//echo $message;
-				//else
-					$translatecode($message);
-			}
-		?>
-	</span>
+		<span id="output">
+		</span>
 	</div>
 	<div>
 	<h1>About</h1>
-		Translator instructions: choose a starting language, choose a target language, enter text, and press submit to translate.<br><br>
+		Translator instructions: choose a starting language, choose a target language, enter text, and press submit to translate.<br>
+		Permitted characters are the Latin Alphabet as well as<br> , . ; " ' \n ĥ ĝ ĵ ĉ ŭ ŝ<br><br>
 		Made by Marcus Alder, 2015-2016.
 	</div>
 	<div id="info">
@@ -334,5 +151,18 @@
 	</div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			$("#submit").click(function()
+			{
+			    $.post("algorithm.php", $("#query").serialize()).done(function(result)
+			    {
+			        $("#output").html(result);
+			    })
+			})
+		});
+	</script>
+
 </body>
 </html>
