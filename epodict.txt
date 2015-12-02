@@ -4235,9 +4235,7 @@ esti preskaŭ:abut on to,abut to
 esti sklaviĝinta:be addicted
 esti traktata kiel:be treated as
 esti unu el:belong to,be one of
-esti[1]:be
-esti[2]:be
-esti[3]:be
+esti:be
 estigi:develop
 estiĝi:arise
 estimata:dear

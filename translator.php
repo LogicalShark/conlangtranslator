@@ -3,78 +3,16 @@
 	<title>Conlang Translator</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-	<style>
-	body {
-		background-size: cover;
-	}
-	h1 {
-		text-align: center;
-		text-decoration: underline;
-		font-family: sans-serif;
-	}
-	h2 {
-		font-family: sans-serif;
-	}
-
-	a {
-		color:#660066;}
-	a:hover {
-		color:#903390;}
-	a:visited {
-		color:#3D003D;}
-	
-	div {
-		box-shadow: 10px 10px;
-		max-width: 400px;
-		padding: 15px;
-		border: 10px solid gray;
-		border-radius: 10px;
-		margin: 15px;
-		background-color: #CCCCCC;
-		-webkit-transition: width 2s, height 2s, -webkit-transform 2s;
-		transition: width 2s, height 2s, transform 2s;
-	}
-	
-	#info {
-		box-shadow: 0px 0px;
-		max-width: 400px;
-		margin: 10px;
-		position: fixed;
-		right: 0;
-		top: 0;
-	}
-
-	#header {
-		max-width: 600px;
-		padding: 8px;
-		border: 5px solid gray;
-		border-radius: 5px;
-		margin: 10px;
-	}
-
-	#message {padding: 1px;}
-
-	#output {
-		max-width: 350px;
-		padding: 1px;
-		border: 3px solid gray;
-		border-radius: 1px;
-		margin: 3px;
-		-webkit-transition: width 2s, height 2s, -webkit-transform 2s;
-		transition: width 2s, height 2s, transform 2s;	
-	}
-
-	.langname {	font-size: 20px; }
-	.langimg { width: 60px; height: 50px; padding: 1px;}
-	</style>
+	<link rel="stylesheet" href="translatorstyle.css" type="text/css">
 </head>
-<body background="conlang.png">
-	<div id="header">
+<!-- <body background="conlang.png"> -->
+<body style="background-color:#91008c;">
+	<div id="header" class="greybox">
 	<h1 style="font-family: sans-serif; font-size: 40px;"><b>Constructed Language Resource Page<b></h1>
 	<h2 style="font-size: 18px; text-indent: 10px;">Created by Marcus Alder</h2>
 	</div>
 	<font face="courier">
-	<div id="translator">
+	<div id="translator" class="greybox">
 		<h1>Translator</h1><br>
 		<form method="POST" id="query">		
 		<textarea rows="5" cols="40" id="message" name="message" size="20" style="padding: 1px;">Input here</textarea>
@@ -89,10 +27,10 @@
 		<br><br>
 
 		<select name="starter" id="starter" size="1">
-		  <option>toki pona</option>
+		  <option selected="selected">toki pona</option>
 		  <option>English</option>
 		  <option>Esperanto</option>
-		  <option selected="selected">Ido</option>
+		  <option>Ido</option>
 		  <option>Interlingua</option>
 		</select>
 		<br>to<br>
@@ -125,13 +63,27 @@
 		<span id="output">
 		</span>
 	</div>
-	<div>
+	
+	<div id="about" class="greybox">
 	<h1>About</h1>
 		Translator instructions: choose a starting language, choose a target language, enter text, and press submit to translate.<br>
 		Permitted characters are the Latin Alphabet as well as<br> , . ; " ' \n ĥ ĝ ĵ ĉ ŭ ŝ<br><br>
-		Made by Marcus Alder, 2015-2016.
+		Made by Marcus Alder, 2015-2016.<br><br>
+		Translate Page:<br>
+		
+		<div id="google_translate_element"></div>
+		<script type="text/javascript">
+			function googleTranslateElementInit() 
+			{
+				new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+			}
+		</script>
+
 	</div>
-	<div id="info">
+	
+	<div id="info" class="greybox grow">
+		<h1>Information</h1>
+		<br><br>
 		<p class="langname"><img src="esperanto.png" alt="Flag of Esperanto" class="langimg">Esperanto</p>
 		<a href="http://www.esperanto.net/veb/faq.html">Overview</a><br>
 		<a href="http://en.lernu.net">Lessons</a><br>
@@ -151,14 +103,15 @@
 	</div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 	<script type="text/javascript">
 		$(document).ready(function()
 		{
 			$("#submit").click(function()
 			{
 			    $.post("algorithm.php", $("#query").serialize()).done(function(result)
-			    {
-			        $("#output").html(result);
+			    { 
+			    	$("#output").html(result.substring(10));
 			    })
 			})
 		});

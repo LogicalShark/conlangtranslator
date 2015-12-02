@@ -8,6 +8,7 @@ a,e,i,o,u
 b,d,f,g,j,k,l,m,n,p,r,s,t,w,v
 No tense, case, declension, conjucation, number, gender, dipthongs
 Word order: Subject e Verb e Object
+Numbers: binary
 ---------------------------------------------------DICTIONARY---------------------------------------------------
 a:ah
 bon:good,easy,simple

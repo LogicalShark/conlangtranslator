@@ -1,0 +1,565 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"border",
+				"border-style"
+			],
+			[
+				"position",
+				"background-position"
+			],
+			[
+				"get",
+				"getElementById"
+			],
+			[
+				"time",
+				"time_spent"
+			],
+			[
+				"subj",
+				"subjectwords"
+			],
+			[
+				"total",
+				"remainingTreeTotal"
+			],
+			[
+				"in",
+				"indicies"
+			],
+			[
+				"interlingua",
+				"Interlingua"
+			],
+			[
+				"preg_",
+				"preg_match"
+			],
+			[
+				"c",
+				"copy"
+			],
+			[
+				"co",
+				"copy"
+			],
+			[
+				"print",
+				"printGrid"
+			],
+			[
+				"bit",
+				"bitsArray"
+			],
+			[
+				"num",
+				"numbytes"
+			],
+			[
+				"make",
+				"makeFile"
+			],
+			[
+				"eno",
+				"encodedArr"
+			],
+			[
+				"encode",
+				"encodedArr"
+			],
+			[
+				"enco",
+				"encodedArr"
+			],
+			[
+				"code",
+				"codeArray"
+			],
+			[
+				"la",
+				"lastIndex"
+			],
+			[
+				"freq",
+				"frequency"
+			],
+			[
+				"cod",
+				"codeArray"
+			],
+			[
+				"b",
+				"bitsArray"
+			],
+			[
+				"l",
+				"loopNumber"
+			],
+			[
+				"tr",
+				"treeArr"
+			],
+			[
+				"inde",
+				"index2"
+			],
+			[
+				"ind",
+				"index1"
+			],
+			[
+				"min",
+				"minV1"
+			],
+			[
+				"do",
+				"docArr"
+			],
+			[
+				"arr",
+				"codeArr"
+			],
+			[
+				"numL",
+				"numLettersDone"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 588.0,
+		"last_filter": "Package control",
+		"selected_items":
+		[
+			[
+				"Package control",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 600.0
+	},
+	"console":
+	{
+		"height": 180.0,
+		"history":
+		[
+			"Package Control: Install Package",
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/Marcus/Documents/CS/Other/timesheettimeline.html",
+		"/C/Users/Marcus/Documents/CS/Other/timesheet.js",
+		"/C/Users/Marcus/Documents/CS/Other/timeline.php",
+		"/C/Users/Marcus/Documents/CS/Parallel/fire.c",
+		"/C/Users/Marcus/Documents/CS/Parallel/fire3.c",
+		"/C/Users/Marcus/Documents/CS/Other/tabletimeline.html",
+		"/C/Users/Marcus/Documents/CS/Parallel/tabbedtimeline",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/colleges.txt",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/outputs.txt",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/markov.php",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/mchains.php",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/ANN.py",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/alphametics.py",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/tictactoe.py",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/sudoku.py",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/salesman.py",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/GA2.py",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/GA.py",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/perceptrons6.py",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/ChineseWikipedia.txt",
+		"/C/Users/Marcus/Documents/CS/Other/index.html",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/perceptrons5.py",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/hillclimber.py",
+		"/C/Users/Marcus/Documents/CS/Parallel/fire3a.c",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/coin.py",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/canny.py",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/trie.py",
+		"/C/Users/Marcus/Documents/CS/Artificial Intelligence/Wolfram.py",
+		"/C/Users/Marcus/Documents/CS/Parallel/fire2.c",
+		"/C/Users/Marcus/Documents/CS/Shipper/shipper.php",
+		"/C/Users/Marcus/Documents/CS/Shipper/inc.php",
+		"/C/Users/Marcus/Documents/CS/Shipper/search.php",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/TJCrushes.txt",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/anime.txt",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/iodine.txt",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/declaration.txt",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/index.php",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/epodict.txt",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/tpkdict.txt",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/idodict.txt",
+		"/C/Users/Marcus/Documents/CS/Parallel/mpidemo.c",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/tkpepodict.txt.txt",
+		"/C/Users/Marcus/Documents/CS/Senior Research/translator.php",
+		"/C/Users/Marcus/Documents/CS/GitHub/LogicalShark.github.io/index.html",
+		"/C/Users/Marcus/Documents/CS/Senior Research/conlangtranslator/index.html",
+		"/C/Users/Marcus/Documents/CS/Parallel/MobyDick.txt",
+		"/C/Users/Marcus/Documents/CS/Parallel/decodeme2.txt",
+		"/C/Users/Marcus/Documents/CS/Parallel/huffencode.c",
+		"/C/Users/Marcus/Documents/CS/Parallel/huffdecode.c",
+		"/C/Users/Marcus/Documents/CS/Senior Research/example.html",
+		"/C/Users/Marcus/Documents/CS/Parallel/decodeME.txt",
+		"/C/Users/Marcus/Documents/CS/Parallel/decodeME2.txt",
+		"/C/Users/Marcus/Documents/CS/Parallel/encodeme.txt",
+		"/C/Users/Marcus/Documents/GitHub/research1/thing.txt"
+	],
+	"find":
+	{
+		"height": 31.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"echo",
+			"\\|\\|",
+			"||",
+			"cornelia",
+			"67",
+			"</td>\\|\\|",
+			"\\|\\|",
+			"||",
+			"consul ",
+			"</td>\\n",
+			"julia",
+			"\\|",
+			"\\t\\t</td>",
+			"\\t</td",
+			"\\t<td",
+			"    |</",
+			"padding",
+			"<?.p>",
+			"</td>",
+			"<td>",
+			"</td>",
+			"(?<=[0-9])</td",
+			"td>(?=[0-9])",
+			"td>?([0-9])",
+			"8",
+			"Caesar",
+			"h2",
+			"size",
+			" ",
+			"asdf",
+			"type",
+			"script",
+			"ajax",
+			"translation",
+			"\n	",
+			"toki pon",
+			"id=\"",
+			"_POST",
+			"new",
+			"\\(\\(",
+			"alert",
+			"script",
+			"similar",
+			"contain",
+			"end",
+			"aper",
+			"vocative",
+			"ll",
+			"sub",
+			"translatetext",
+			"\\$",
+			"$",
+			"onclick",
+			"				\n",
+			"POST",
+			"<script",
+			":",
+			"reg_r",
+			"rows",
+			"epo",
+			"ĥ",
+			"padding:",
+			"padding",
+			"div",
+			"grow",
+			"kek",
+			"kec",
+			"keck",
+			"addiction",
+			"quiz",
+			"generate",
+			"\\$text",
+			"an",
+			"\\[ai\\]",
+			"i",
+			"ar",
+			"u",
+			"ez",
+			"oj",
+			"i",
+			"name",
+			"index\\.",
+			"index\\,",
+			"index\\.",
+			"index.",
+			"\\[citation needed\\]",
+			"doremi",
+			"TV",
+			" \\n",
+			"\\[[0-9]\\]",
+			"\\n +",
+			"\\t",
+			"[0-9][0-9][0-9][0-9]",
+			"[0-9][0-9][0-9][0-9]–[0-9][0-9][0-9][0-9]",
+			"[0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]",
+			"\\n\\n+",
+			"  +",
+			"TV",
+			"\\[[0-9][0-9]\\]",
+			"\\w\\[edit]\\n",
+			"\\w \\[ed",
+			"\\n+",
+			"  +",
+			"\\n+",
+			">",
+			"<",
+			".\n",
+			"<",
+			"<....>",
+			"<",
+			"<...>",
+			"<..>",
+			"<",
+			"<span",
+			"<",
+			"  +",
+			"</b>",
+			"<b>",
+			"<br />",
+			"<p class=\".*\">",
+			"<p",
+			"<p.?>",
+			"<p.*></p>",
+			"<.?u>",
+			"<.?p>",
+			"<a href.*</a>",
+			"<p>.*</p>",
+			"College"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"</td>",
+			"\\|\\|",
+			"",
+			"<h2>\\|</h2>",
+			"\\t  </td>",
+			"\\t\\t</td",
+			"",
+			"</p></td>",
+			"<td><p>",
+			"\\t</td>",
+			"\"</td",
+			"td>\"",
+			"4",
+			"5",
+			"\\t",
+			"output",
+			"newmsg",
+			"\\(",
+			"document\\.write(",
+			"",
+			"\\$input",
+			"on",
+			"oh",
+			"in",
+			"\\[aio\\]",
+			"ant",
+			"anta",
+			"i",
+			"ar",
+			"u",
+			"ez",
+			"",
+			"\\n",
+			"",
+			"\\n",
+			" ",
+			"",
+			"\\n",
+			" ",
+			"",
+			"\\n",
+			" ",
+			"\\n",
+			"",
+			" ",
+			"",
+			"\\n",
+			"",
+			"\\n",
+			"",
+			"\\n\\{\\n",
+			"\\n\\{",
+			"br",
+			"{document",
+			"result",
+			"(size-1)",
+			">=0",
+			"=",
+			"\\,",
+			"\\)",
+			" ",
+			";",
+			" ",
+			";",
+			" ",
+			"",
+			" ",
+			"",
+			"\\n",
+			"",
+			"\\n",
+			",",
+			":",
+			"",
+			":",
+			",",
+			":",
+			" ",
+			"\\n",
+			":",
+			" ",
+			"",
+			"forest",
+			"newForest",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 28.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.sftp":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/Python/Python.sublime-build",
+	"project": "algorithm.sublime-project",
+	"replace":
+	{
+		"height": 58.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 305.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
