@@ -60,14 +60,15 @@
 		<input type="submit" value="Submit" name="submit" id="submit">
 		<br>
 		</font>
-		<span id="output">
-		</span>
+		<br>
+		<div id="output">
+		</div>
 	</div>
 	
 	<div id="about" class="greybox">
 	<h1>About</h1>
 		Translator instructions: choose a starting language, choose a target language, enter text, and press submit to translate.<br>
-		Permitted characters are the Latin Alphabet as well as<br> , . ; " ' \n ĥ ĝ ĵ ĉ ŭ ŝ<br><br>
+		Permitted characters are the Latin Alphabet as well as<br> , . ; " ' \n ĥ ĝ ĵ ĉ ŭ ŝ<br>Currently available translations: simple toki pona to Esperanto, Ido to Esperanto.<br><br>
 		Made by Marcus Alder, 2015-2016.<br><br>
 		Translate Page:<br>
 		

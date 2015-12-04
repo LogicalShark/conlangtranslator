@@ -25,7 +25,7 @@
  ken:pov-
  *ken:ebl-
  kepken:uz-
- *kepken:kun
+ *pre:kepken:kun
  kili:frukt-
  kin:ankaŭ
  kiwen:ŝton-
@@ -37,7 +37,7 @@
  lape:dorm-
  laso:blu-
  lawa:ĉef-
- *lawa:-estr-
+ *alt*lawa:-estr-
  len:vest-
  lete:malvarm-
  lili:malgrand-
@@ -55,14 +55,14 @@
  mi:mi
  mije:maskul-
  moku:manĝ-
- *moku:trink-
+ *alt*moku:trink-
  moli:mort-
  monsi:malantaŭ-
- *monsi:reen
+ *prep*monsi:reen
  mu:muu
  mun:lun-
  musi:amuz-
- *musi:lud-
+ *alt*musi:lud-
  mute:mult-
  nanpa:nombr-
  nasa:frenz-
@@ -70,14 +70,14 @@
  nena:ĝib-
  ni:ĉi
  nimi:vort-
- *nimi:nom-
+ *alt*nimi:nom-
  o:hej
  oko:okul-
  olin:am-
  ona:li
- *ona:ŝi
+ *alt*ona:ŝi
  open:ŝalt-
- *open:malferm-
+ *alt*open:malferm-
  pakala:erar-
  *pakala:detru-
  pali:agad-
