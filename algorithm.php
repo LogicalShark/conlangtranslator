@@ -1,12 +1,13 @@
 <?php
 //GLOBAL CODING REFERENCE
-//tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua; nat = natural
-//permitted characters: [ ], [a-z], [A-Z], [,.;"'], [\n], [ĥĝĵĉŭŝ]
-//adj = adjective; adv = adverb; art = article; con = conjunction; int = interjection; nou = noun; pre = preposition; pro = pronoun; ver = verb; oth = other; alt = alternate translation
-//tense -3:pluperfect, -2:perfect, -1:imperfect, 0:present, 1:future, 2:future perfect
-//mood: 0:indicative, 1:subjunctive
-//voice 0:active, 1:passive
-//clause classification: tense, mood, voice
+//Languages				| tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua; nat = natural
+//Permitted characters 	| [ ], [a-z], [A-Z], [,.;"'], [\n], [ĥĝĵĉŭŝ]
+//POS| adj = adjective; adv = adverb; art = article; con = conjunction; int = interjection; nou = noun; pre = preposition; pro = pronoun; ver = verb; oth = other; alt = alternate translation
+//
+//Tense| -3:pluperfect, -2:perfect, -1:imperfect, 0:present, 1:future, 2:future perfect
+//Mood| 0:indicative, 1:subjunctive
+//Voice| 0:active, 1:passive
+//Clause classification| tense, mood, voice
 
 //----------------------------------------GET HTML SOURCE FROM SITE------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	function getHTML($url,$timeout)
@@ -190,16 +191,20 @@
 		$message = preg_replace('/[0] =>/', '', $message);
 //------------------------------------------RANK 1 MODIFICATIONS: CLAUSE CLASSIFICATION----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		//Find tense/time
-		if(preg_match('/tenpo .+ la'))
+		if(preg_match('/tenpo .+ la/', $message))
 		{
 
 		}
 //------------------------------------------RANK 2 MODIFICATIONS: POS IDENTIFICATION----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		$messagewords = explode(" ", $message);
 		//Subject
+		$includesli = 3;
 		$firstword = $messagewords[0];
 		if($firstword=="mi"||$firstword=="sina")
+		{
+			$includesli = 0;
 			$subject = $firstword;
+		}
 		else
 			$subject = substr($message, 0, strpos($message, ' li '));
 		$subjectwords = explode(" ", $subject);
@@ -209,7 +214,7 @@
 			$partsofspeech[$x] = "adj";
 		}
 		//Verb
-		$verb = substr($message, strlen($subject), strpos($message, ' e ') - strlen($subject));
+		$verb = substr($message, strlen($subject) + $includesli, strpos($message, ' e ') - (strlen($subject) + $includesli));
 		$verbwords = explode(" ", $verb);
 		$partsofspeech[array_search("e", $messagewords) - sizeof($verbwords)+1] = "ver";
 		for($z = array_search("e", $messagewords)-sizeof($verbwords)+2; $z<array_search("e", $messagewords); $z++)
