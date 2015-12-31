@@ -186,12 +186,12 @@
 //--------------------------------------------RANK 0 MODIFICATIONS: CONSTANTS--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		$prefixes = "";
 		$suffixes = "";
-		if(preg_match('/anu seme\./', $original))
+		if(preg_match('/anu seme\./', $original))//Yes or no question
 		{
 			$prefixes = "ĉu ";
 			$message = substr($message, 0, strlen($message)-9);
 		}
-		if(preg_match('/kin\./', $original))
+		if(preg_match('/kin\./', $original))//As well/indeed
 		{
 			$suffixes = " tiel";
 			$message = substr($message, 3);		
@@ -202,48 +202,97 @@
 		$message = preg_replace('/[0] =>/', '', $message);
 //------------------------------------------RANK 1 MODIFICATIONS: CLAUSE CLASSIFICATION----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		//Find tense/time
+		$presentprefix = 0;//Default value is 0, if there is a "tenpo ni la" the tense stays 0 but a "now" needs to be added
 		if(preg_match('/tenpo .+ la/', $message))
 		{
 			$clauseinfo[0] = 0;
 			//Past
-			if(preg_match('/tenpo pini la/', $message))
+			if(preg_match('/tenpo pini la/', $message))//General past
 				$clauseinfo[0] = -1;
-			if(preg_match('/tenpo suno pini la/', $message))
+			if(preg_match('/tenpo suno pini la/', $message))//Yesterday
 				$clauseinfo[0] = -.3;
-			if(preg_match('/tenpo pimeja pini la/', $message))
+			if(preg_match('/tenpo pimeja pini la/', $message))//Last night
 				$clauseinfo[0] = -.25;			
-			if(preg_match('/tenpo pini lili la/', $message))
-				$clauseinfo[0] =  0.1;
+			if(preg_match('/tenpo pini lili la/', $message))//Recently
+				$clauseinfo[0] =  -0.1;
 			//Future
-			if(preg_match('/tenpo kama lili la/', $message))
+			if(preg_match('/tenpo kama lili la/', $message))//Soon
 				$clauseinfo[0] =  0.1;
-			if(preg_match('/tenpo pimeja ni la/', $message))
+			if(preg_match('/tenpo pimeja ni la/', $message))//Tonight
 				$clauseinfo[0] =  0.25;
-			if(preg_match('/tenpo pimeja kama la/', $message))
+			if(preg_match('/tenpo pimeja kama la/', $message))//Tonight (alt)
 				$clauseinfo[0] =  0.25;
-			if(preg_match('/tenpo suno kama la/', $message))
+			if(preg_match('/tenpo suno kama la/', $message))//Tomorrow
 				$clauseinfo[0] = .3;
-			if(preg_match('/tenpo pini kama la/', $message))
+			if(preg_match('/tenpo pini kama la/', $message))//Future perfect?
 				$clauseinfo[0] = .5;
-			if(preg_match('/tenpo kama la/', $message))
-				$clauseinfo[0] = -1;
+			if(preg_match('/tenpo kama la/', $message))//General future
+				$clauseinfo[0] = 1;
 			//Present
-			if(preg_match('/tenpo suno ni la/', $message))
+			if(preg_match('/tenpo suno ni la/', $message))//Future today
 				$clauseinfo[0] =  0.2;
-			if(preg_match('/tenpo ni la/', $message))
+			if(preg_match('/tenpo ni la/', $message))//Now
+			{
+				$presentprefix = 1;
 				$clauseinfo[0] = 0;
+			}
 			//Exceptions
-			if(preg_match('/tenpo suli la/', $message))
+			if(preg_match('/tenpo suli la/', $message))//For a long time
 				$clauseinfo[0] = 2;
-			if(preg_match('/tenpo lili la/', $message))
+			if(preg_match('/tenpo lili la/', $message))//For a short time
 				$clauseinfo[0] = -2;
-
+			//Others can be added, this covers all the basic ones
+		}
+		$message = preg_replace('/tenpo .+ la. ?/', '', $message);//Get rid of "tenpo _ la"
+		//Add prefixes to indicate time
+		switch($clauseinfo[0])
+		{
+			case -2:
+			$prefixes = "Mallongtempe, ".$prefixes;
+			break;
+			case -1:
+			$prefixes = "En la pasinteco, ".$prefixes;
+			break;
+			case -.3:
+			$prefixes = "Hieraŭ, ".$prefixes;
+			break;
+			case -.25:
+			$prefixes = "Lasta nokto, ".$prefixes;
+			break;
+			case -.1:
+			$prefixes = "ĵus, ".$prefixes;
+			break;
+			case .1:
+			$prefixes = "Baldaŭ, ".$prefixes;
+			break;
+			case .2:
+			$prefixes = "Hodiaŭ, ".$prefixes;
+			break;
+			case .25:
+			$prefixes = "ĉinokte, ".$prefixes;
+			break;
+			case .3:
+			$prefixes = "Morgaŭ, ".$prefixes;
+			break;
+			case .35:
+			$prefixes = "Morgaŭ nokto, ".$prefixes;
+			break;
+			case 1:
+			$prefixes = "En la estonteco, ".$prefixes;
+			break;
+			case 2:
+			$prefixes = "Longtempe, ".$prefixes;
+			break;
+			case 0:
+			if($presentprefix == 1)
+				$prefixes = "Nun, ".$prefixes;
+			break;
 		}
 		//Find voice/mood
 		//?
 //------------------------------------------RANK 2 MODIFICATIONS: POS IDENTIFICATION----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		$messagewords = explode(" ", $message);
-		//Subject
+		//Subject + Adjectives
 		$includesli = 3;
 		$firstword = $messagewords[0];
 		if($firstword=="mi"||$firstword=="sina")
@@ -259,7 +308,7 @@
 		{
 			$partsofspeech[$x] = "adj";
 		}
-		//Verb
+		//Verb + Adverbs
 		$verb = substr($message, strlen($subject) + $includesli, strpos($message, ' e ') - (strlen($subject) + $includesli));
 		$verbwords = explode(" ", $verb);
 		$partsofspeech[array_search("e", $messagewords) - sizeof($verbwords)+1] = "ver";
@@ -267,7 +316,7 @@
 		{
 			$partsofspeech[$z] = "adv";
 		}
-		//Object
+		//Object + Adjectives
 		$object = substr($message, strpos($message, ' e ')+3);
 		$objectwords = explode(" ", $object);
 		$partsofspeech[array_search("e", $messagewords)] = "oth";
@@ -280,6 +329,7 @@
 		$file = fopen("tkpepodict.txt", "r");
 		$dictwords = explode("\n", fread($file, filesize("tkpepodict.txt")));
 		$new = "";
+		$index = 0;
 		foreach($messagewords as &$msgword)
 		{
 			if($msgword!="")
@@ -287,14 +337,14 @@
 				$wordIsTranslatable = false;
 				foreach($dictwords as &$dictword)
 				{
-					if(strpos($dictword, $msgword.":")==1)
+					if(strpos($dictword, $msgword.":")==1)  						//If in the dictionary
 					{
-						$wordIsTranslatable = true;
-						$new.=substr($dictword, strpos($dictword, ":")+1);
-						if(strpos($dictword, "-")>0)
+						$wordIsTranslatable = true;									//Know word is translatable
+						$new.=substr($dictword, strpos($dictword, ":")+1); 			//Append word to output
+						if(strpos($dictword, "-")>0) 								//If it needs an ending
 						{  
 							$ending = "";
-							switch($partsofspeech[array_search($msgword, $messagewords)])
+							switch($partsofspeech[$index])							//Assign ending based on part of speech
 							{
 								case "adj":
 								$ending = "a";
@@ -306,14 +356,17 @@
 								$ending = "o";
 								break;
 								case "ver":
-								if(1>=$clauseinfo[0]>0)
+								//Past
+								if(1>=$clauseinfo[0] && $clauseinfo[0]>0)
 								{
 									$ending = "os";
 								}
-								else if(-1<=$clauseinfo[0]<0)
+								//Future
+								else if(-1<=$clauseinfo[0]  && $clauseinfo[0] <0)
 								{
 									$ending = "is";
 								}
+								//Present
 								else
 								{
 									$ending = "as";
@@ -346,6 +399,7 @@
 				}
 				$new.=" ";
 			}
+			$index+=1;
 		}
 		fclose($file);
 		echo $prefixes.$new.$suffixes;
@@ -355,9 +409,15 @@
 		$original = $message;
 		echo $message;
 	}
+	function eponat($message)
+	{
+		// INFO HERE
+		// https://cloud.google.com/translate/v2/using_rest#Translate
+		// Done in javascript on translator.php
+	}
 	$message = $_POST["message"];
 	$translatecode = "";
-	switch($_POST['starter'])
+	switch($_POST['source'])
 	{
 		case "toki pona": $translatecode.="tkp";
 		break;
@@ -381,7 +441,7 @@
 		break;
 		default: $translatecode.="nat";
 	}
-	if($_POST['starter']==$_POST['target'])
+	if($_POST['source']==$_POST['target'])
 		echo $message;
 	else
 		$translatecode($message);

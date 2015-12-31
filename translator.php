@@ -4,6 +4,12 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="translatorstyle.css" type="text/css">
+	<script>
+	function translateText(response) 
+	{
+		document.getElementById("output").innerHTML = response.data.translations[0].translatedText;
+  	}
+	</script>
 </head>
 <!-- <body background="conlang.png"> -->
 <body style="background-color:#91008c;">
@@ -26,7 +32,7 @@
 		<button accesskey=u id="u" onClick="addU()" type="button">ŭ</button>		
 		<br><br>
 
-		<select name="starter" id="starter" size="1">
+		<select name="source" id="source" size="1">
 		  <option selected="selected">toki pona</option>
 		  <option>English</option>
 		  <option>Esperanto</option>
@@ -56,8 +62,14 @@
 			{document.getElementById("message").value = (document.getElementById("message").value).concat("ŭ");}
 			function addS()
 			{document.getElementById("message").value = (document.getElementById("message").value).concat("ŝ");}
+		  	var newScript = document.createElement('script');
+			newScript.type = 'text/javascript';
+			var sourceText = escape(document.getElementById("message").innerHTML);
+			var source = 'https://www.googleapis.com/language/translate/v2?key=YOUR-API-KEY&source=eo&target=en&callback=translateText&q=' + sourceText;
+			newScript.src = source;
+			document.getElementsByTagName('head')[0].appendChild(newScript);
 		</script>
-		<input type="submit" value="Submit" name="submit" id="submit">
+		<input type="submit" value="Submit" name="submit" id="submit" accesskey="p">
 		<br>
 		</font>
 		<br>

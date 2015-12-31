@@ -1,14 +1,12 @@
 <?php
 require 'markov.php';
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit'])) 
+{
     $order  = $_REQUEST['order'];
     $length = $_REQUEST['length'];
     $input  = $_REQUEST['input'];
-    if(isset($_REQUEST['first']))
-        $first = $_REQUEST['first'];
-    else
-        $first = ' ';
+    $first = $_REQUEST['first'];
     $text = $input;
     if(isset($text)) 
     {
