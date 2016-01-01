@@ -2,7 +2,7 @@
 function createTable($input, $order=4) 
 {
     if(!isset($input))
-        return 0;
+        return;
     $table = array();
     //Make the index table
     for ($i = 0; $i<strlen($input); $i++)
@@ -35,7 +35,7 @@ function createText($first=' ', $length=1000, $table, $order=4)
     $output = $char;
     for ($k = 0; $k<($length/$order); $k++) 
     {
-        $newchar = return_weighted_char($table[$char]);            
+        $newchar = createNextChars($table[$char]);            
         
         if ($newchar) 
         {
@@ -54,6 +54,8 @@ function createText($first=' ', $length=1000, $table, $order=4)
 
 function createNextChars($array) 
 {
+    if(!isset($array))
+        return;
     $total = array_sum($array);
     $rand  = mt_rand(1, $total);
     foreach ($array as $item => $weight) 

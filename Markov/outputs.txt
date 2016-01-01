@@ -1,6 +1,4 @@
 //Colleges:
-
-    gosy University (IA)
 Ambash College (VT)
 University (VA)
 Theological Busine University of Texas–Dallaska System (LA)
@@ -35,8 +33,7 @@ DePaul (MN)
 Delaware (CA)
 Saint Paul University of Technology (NY)
 Southern Adventral Baldwin University of the Kingsvilliami College (MD)
-University (MA)
-Okl    
+University (MA) 
 
 //Chinese Wikipedia:
 
@@ -125,3 +122,6 @@ What band who so gallantly stream:
 'Tis the deep,
 Where is our motto: "In God is our trust"
 And where is that hath made and this be our motto: "In God is that    
+
+
+//
