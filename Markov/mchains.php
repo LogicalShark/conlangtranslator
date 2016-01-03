@@ -22,6 +22,11 @@ if (isset($_POST['submit']))
     <title>Markov Chains</title>
 </head>
 <body>
+<h1>Markov Chains</h1><br>
+<p>Instructions: Input some text, more is better. 
+<br>Order -- How close it is to the original text. 2-: Gibberish, 3:Nonsensical, 4/5:Generally Optimal, 6+:Close to Original. 
+<br>Length -- The number of characters outputted.
+<br>Starting seed -- The first characters of the output, generation will procede from there.</p><br>
     <form method="post" action="" name="markov">
         Input:
         <br>
