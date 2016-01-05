@@ -1,8 +1,8 @@
 <?php
-//GLOBAL CODING CONVENTIONS REFERENCE
+//GLOBAL NAMING CONVENTIONS REFERENCE
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Languages					| tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua; nat = natural
+//Languages					| nat = natural; con = constructed; tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Permitted characters 		| [ ], [a-z], [A-Z], [,.;"'], [\n], [ĥĝĵĉŭŝ]
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -18,6 +18,11 @@
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Clause classification 	| [0]:tense, [1]:mood, [2]:voice
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Example sentences
+// tenpo pini la, jan pona li moku nasa e telo lili, anu seme?
+// En la pasinteco, ĉu homo bona manĝis frenze akvo malgranda?
+// In the past, did a good person crazily drink a little water?
 
 //----------------------------------------GET HTML SOURCE FROM SITE-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	function getHTML($url,$timeout)
@@ -162,6 +167,7 @@
 			// echo "match: $matches[2]<br>";
 			$message = preg_replace("/ $word./", " $prefix$matches[2]$extras ", $message);
 		}
+		return $message;
 	}
 	function epoido($message)
 	{
@@ -174,6 +180,7 @@
 		$message = preg_replace("/ŝ/", "sh", $message);
 
 		echo $message;
+		return $message;
 	}
 	function tkpepo($message)
 	{
@@ -186,10 +193,13 @@
 //--------------------------------------------RANK 0 MODIFICATIONS: CONSTANTS--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		$prefixes = "";
 		$suffixes = "";
-		if(preg_match('/anu seme\./', $original))//Yes or no question
+		if(preg_match('/anu seme\?/', $original))//Yes or no question
 		{
 			$prefixes = "ĉu ";
-			$message = substr($message, 0, strlen($message)-9);
+			if(preg_match("/, anu seme\?/", $original))
+				$message = substr($message, 0, strlen($message)-11)."?";
+			else
+				$message = substr($message, 0, strlen($message)-10)."?";
 		}
 		if(preg_match('/kin\./', $original))//As well/indeed
 		{
@@ -236,7 +246,7 @@
 				$presentprefix = 1;
 				$clauseinfo[0] = 0;
 			}
-			//Exceptions
+			//Exception cases
 			if(preg_match('/tenpo suli la/', $message))//For a long time
 				$clauseinfo[0] = 2;
 			if(preg_match('/tenpo lili la/', $message))//For a short time
@@ -290,7 +300,7 @@
 		}
 		//Find voice/mood
 		//?
-//------------------------------------------RANK 2 MODIFICATIONS: POS IDENTIFICATION----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------RANK 2 MODIFICATIONS: PART OF SPEECH IDENTIFICATION----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		$messagewords = explode(" ", $message);
 		//Subject + Adjectives
 		$includesli = 3;
@@ -325,15 +335,22 @@
 		{
 			$partsofspeech[$y] = "adj";
 		}
-//--------------------------------------------RANK 2 MODIFICATIONS: LITERAL WORD REPLACEMENT AND POS ADDITION-------------------------------------------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------RANK 2 MODIFICATIONS: LITERAL WORD REPLACEMENT AND P.O.S. ADDITION-------------------------------------------------------------------------------------------------------------------------------------------------------
 		$file = fopen("tkpepodict.txt", "r");
 		$dictwords = explode("\n", fread($file, filesize("tkpepodict.txt")));
 		$new = "";
 		$index = 0;
+		$punct = " ";
 		foreach($messagewords as &$msgword)
 		{
 			if($msgword!="")
 			{
+				//Get rid of punctuation
+				if(preg_match("/[?.,;:]/", $msgword)==1)
+				{
+					$punct=substr($msgword, strlen($msgword)-1)." ";
+					$msgword=substr($msgword, 0, strlen($msgword)-1);
+				}
 				$wordIsTranslatable = false;
 				foreach($dictwords as &$dictword)
 				{
@@ -397,23 +414,44 @@
 				{
 					$new.=$msgword;
 				}
-				$new.=" ";
+				//Add punctuation and space
+				$new.=$punct;
+				$punct = " ";
 			}
 			$index+=1;
 		}
 		fclose($file);
 		echo $prefixes.$new.$suffixes;
+		return $prefixes.$new.$suffixes;
 	}
 	function epotkp($message)
 	{
 		$original = $message;
 		echo $message;
+		return $message;
+	}
+	function connat($lang, $message)
+	{
+		$funct = '$lang'+'epo'; 		//Language to epo function
+		echo eponat($funct($message));	//Language to epo to nat
+	}
+	function epoepo($message)
+	{
+		return $message;
 	}
 	function eponat($message)
 	{
 		// INFO HERE
 		// https://cloud.google.com/translate/v2/using_rest#Translate
 		// Done in javascript on translator.php
+		return $message;
+	}
+	function natepo($message)
+	{
+		// INFO HERE
+		// https://cloud.google.com/translate/v2/using_rest#Translate
+		// Done in javascript on translator.php
+		return $message;
 	}
 	$message = $_POST["message"];
 	$translatecode = "";
@@ -442,7 +480,9 @@
 		default: $translatecode.="nat";
 	}
 	if($_POST['source']==$_POST['target'])
-		echo $message;
+	echo $message;
+	else if(substr($translatecode, 3)=="nat")
+		connat(substr($translatecode, 0,3), $message);
 	else
 		$translatecode($message);
 ?>

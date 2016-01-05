@@ -84,7 +84,7 @@
  palisa:verg-
  *palisa:baston-
  pana:produkt-
- *pana:don-
+ *alt*pana:don-
  pi:de
  pilin:sent-
  pimeja:nigr-

@@ -1,13 +1,15 @@
+<!doctype html>
 <html>
 <head>
 	<title>Conlang Translator</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="translatorstyle.css" type="text/css">
+	<meta charset="utf-8">
 	<script>
 	function translateText(response) 
 	{
-		document.getElementById("output").innerHTML = response.data.translations[0].translatedText;
+		// document.getElementById("output").innerHTML = response.data.translations[0].translatedText;
   	}
 	</script>
 </head>
@@ -24,12 +26,12 @@
 		<textarea rows="5" cols="40" id="message" name="message" size="20" style="padding: 1px;">Input here</textarea>
 		<br>
 
-		<button accesskey=c id="c" onClick="addC()" type="button">ĉ</button>
-		<button accesskey=g id="g" onClick="addG()" type="button">ĝ</button>
-		<button accesskey=h id="h" onClick="addH()" type="button">ĥ</button>
-		<button accesskey=j id="j" onClick="addJ()" type="button">ĵ</button>
-		<button accesskey=s id="s" onClick="addS()" type="button">ŝ</button>
-		<button accesskey=u id="u" onClick="addU()" type="button">ŭ</button>		
+		<button accesskey=c id="c" onClick="addC()" type="button">&#265;</button>
+		<button accesskey=g id="g" onClick="addG()" type="button">&#285;</button>
+		<button accesskey=h id="h" onClick="addH()" type="button">&#293;</button>
+		<button accesskey=j id="j" onClick="addJ()" type="button">&#309;</button>
+		<button accesskey=s id="s" onClick="addS()" type="button">&#349;</button>
+		<button accesskey=u id="u" onClick="addU()" type="button">&#365;</button>
 		<br><br>
 
 		<select name="source" id="source" size="1">
@@ -50,22 +52,23 @@
 		</form>
 		<script type="text/javascript">
 			//Adding Esperanto-specific characters
-			function addH()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("ĥ");}
-			function addG()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("ĝ");}
-			function addJ()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("ĵ");}
 			function addC()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("ĉ");}
-			function addU()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("ŭ");}
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u0109");}
+			function addG()
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u011D");}
+			function addH()
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u0125");}
+			function addJ()
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u0135");}
 			function addS()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("ŝ");}
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u015D");}
+			function addU()
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u016D");}
+			//Google Translate API usage
 		  	var newScript = document.createElement('script');
 			newScript.type = 'text/javascript';
 			var sourceText = escape(document.getElementById("message").innerHTML);
-			var source = 'https://www.googleapis.com/language/translate/v2?key=YOUR-API-KEY&source=eo&target=en&callback=translateText&q=' + sourceText;
+			var source = 'https://www.googleapis.com/language/translate/v2?key=YOUR-API-KEY&source=eo&target=en&callback=translateText&q=' + sourceText; //May have to change characters, e.g. space to %20
 			newScript.src = source;
 			document.getElementsByTagName('head')[0].appendChild(newScript);
 		</script>
@@ -73,14 +76,14 @@
 		<br>
 		</font>
 		<br>
-		<div id="output">
+		<div id="output"> <!-- style = "display:none;" -->
 		</div>
 	</div>
 	
 	<div id="about" class="greybox">
 	<h1>About</h1>
 		Translator instructions: choose a starting language, choose a target language, enter text, and press submit to translate.<br>
-		Permitted characters are the Latin Alphabet as well as<br> , . ; " ' \n ĥ ĝ ĵ ĉ ŭ ŝ<br>Currently available translations: simple toki pona to Esperanto, Ido to Esperanto.<br><br>
+		Permitted characters are the Latin Alphabet as well as<br> , . ; " ' \n(newline) &#293; &#285; &#309; &#265; &#365; &#349;<br>Currently available translations: simple toki pona to Esperanto, Ido to Esperanto.<br><br>
 		Made by Marcus Alder, 2015-2016.<br><br>
 		Translate Page:<br>
 		
@@ -125,6 +128,7 @@
 			    $.post("algorithm.php", $("#query").serialize()).done(function(result)
 			    { 
 			    	$("#output").html(result.substring(10));
+			    	// document.getElementById("output").style="display:inline;";
 			    })
 			})
 		});
