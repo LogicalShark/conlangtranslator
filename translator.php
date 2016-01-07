@@ -23,7 +23,7 @@
 	<div id="translator" class="greybox">
 		<h1>Translator</h1><br>
 		<form method="POST" id="query">		
-		<textarea rows="5" cols="40" id="message" name="message" size="20" style="padding: 1px;">Input here</textarea>
+		<textarea rows="5" cols="40" id="message" name="message" size="20" style="padding: 1px;" placeholder="Input Here"></textarea>
 		<br>
 
 		<button accesskey=c id="c" onClick="addC()" type="button">&#265;</button>

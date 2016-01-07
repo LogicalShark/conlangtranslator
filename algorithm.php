@@ -1,5 +1,7 @@
 <?php
-//GLOBAL NAMING CONVENTIONS REFERENCE
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------GLOBAL NAMING CONVENTIONS REFERENCE-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Languages					| nat = natural; con = constructed; tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua 
@@ -23,9 +25,14 @@
 // tenpo pini la, jan pona li moku nasa e telo lili, anu seme?
 // En la pasinteco, ĉu homo bona manĝis frenze akvo malgranda?
 // In the past, did a good person crazily drink a little water?
+// mi jan pona
+// mi estas homo bona
+// I am a good man
 
-//----------------------------------------GET HTML SOURCE FROM SITE-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	function getHTML($url,$timeout)
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------UTILITY FUNCTIONS-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	function getHTML($url,$timeout) //Get HTML from website
 	{
 	       $ch = curl_init($url); // initialize curl with given url
 	       curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER["HTTP_USER_AGENT"]); // set  useragent
@@ -35,13 +42,20 @@
 	       curl_setopt($ch, CURLOPT_FAILONERROR, 1); // stop when it encounters an error
 	       return @curl_exec($ch);
 	}
+	function substrToStrpos($string, $target, $addition=0) 			//Substring up to a pattern
+	{return substr($string, 0, strpos($string, $target)+$addition);}
+	function substrFromStrpos($string, $target, $addition=0)		//Substring after a pattern
+	{return substr($string, strpos($string, $target)+$addition);}
+	function strcont($string, $target)								//String contains
+	{return (strpos($string, $target)>0);}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------TRANSLATION FUNCTIONS-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	function idoepo($message)
 	{
 		$original = $message;
-
 //------------------------------------------ADJECTIVES----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		//Comparatives and superlatives are covered by the word replacement
-
 //------------------------------------------VERBS---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		//Change back ilu, elu, olu, onu
 		$message = preg_replace("/ilez/", "ilu", $message);
@@ -104,7 +118,6 @@
 				$prefix='dis';
 			}
 //------------------------------------------SUFFIXES----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 //------------------------------------------ENDINGS----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 			$extras = "";
 //NOUNS		//Replace plural -i with -oj
@@ -132,27 +145,27 @@
 				$extras.='u';
 			}
 //------------------------------------------PUNCTUATION----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-			if(strpos($word, '.')>0)
+			if(strcont($word, '.'))
 			{
 				$w = substr($word, 0, strlen($word)-1);
 				$extras.='.';
 			}
-			else if(strpos($word, ',')>0)
+			else if(strcont($word, ','))
 			{
 				$w = substr($word, 0, strlen($word)-1);
 				$extras.=',';
 			}
-			else if(strpos($word, ';')>0)
+			else if(strcont($word, ';'))
 			{
 				$w = substr($word, 0, strlen($word)-1);			
 				$extras.=';';
 			}
-			else if(strpos($word, '\"')>0)
+			else if(strcont($word, '\"'))
 			{
 				$w = substr($word, 0, strlen($word)-1);			
 				$extras.='\"';
 			}
-			else if(strpos($word, '\n')>0)
+			else if(strcont($word, '\n'))
 			{
 				$w = substr($word, 0, strlen($word)-1);			
 			}
@@ -188,8 +201,8 @@
 		$original = $message;
 		$partsofspeech = array();
 		$clauseinfo = array();
-		for($asdf = 0; $asdf<4; $asdf++)
-			$clauseinfo[$asdf] = 0;
+		for($x = 0; $x<4; $x++)
+			$clauseinfo[$x] = 0;
 //--------------------------------------------RANK 0 MODIFICATIONS: CONSTANTS--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		$prefixes = "";
 		$suffixes = "";
@@ -319,28 +332,74 @@
 			$partsofspeech[$x] = "adj";
 		}
 		//Verb + Adverbs
-		$verb = substr($message, strlen($subject) + $includesli, strpos($message, ' e ') - (strlen($subject) + $includesli));
-		$verbwords = explode(" ", $verb);
-		$partsofspeech[array_search("e", $messagewords) - sizeof($verbwords)+1] = "ver";
-		for($z = array_search("e", $messagewords)-sizeof($verbwords)+2; $z<array_search("e", $messagewords); $z++)
+		if(preg_match("/ e /", $original)!=false) //If it contains "e", i.e. not a "to be" sentence
 		{
-			$partsofspeech[$z] = "adv";
+			$verb = substr($message, strlen($subject) + $includesli, strpos($message, ' e ') - (strlen($subject) + $includesli));
+			$verbwords = explode(" ", $verb);
+			$partsofspeech[array_search("e", $messagewords) - sizeof($verbwords)+1] = "ver";
+			for($z = array_search("e", $messagewords)-sizeof($verbwords)+2; $z<array_search("e", $messagewords); $z++)
+			{
+				$partsofspeech[$z] = "adv";
+			}
+			//Object + Adjectives
+			$object = substr($message, strpos($message, ' e ')+3);
+			$objectwords = explode(" ", $object);
+			$partsofspeech[array_search("e", $messagewords)] = "oth";
+			$partsofspeech[array_search("e", $messagewords)+1] = "nou";
+			for($y = array_search("e", $messagewords)+2; $y<array_search("e", $messagewords)+sizeof($objectwords)+1; $y++)
+			{
+				$partsofspeech[$y] = "adj";
+			}
 		}
-		//Object + Adjectives
-		$object = substr($message, strpos($message, ' e ')+3);
-		$objectwords = explode(" ", $object);
-		$partsofspeech[array_search("e", $messagewords)] = "oth";
-		$partsofspeech[array_search("e", $messagewords)+1] = "nou";
-		for($y = array_search("e", $messagewords)+2; $y<array_search("e", $messagewords)+sizeof($objectwords)+1; $y++)
+		else //"to be" sentences
 		{
-			$partsofspeech[$y] = "adj";
+			if($includesli==0)
+			{
+				//Verb
+				$verb = "@tobe";
+				$message = substrToStrpos($message, ' ', 1).$verb." e ".substrFromStrpos($message, ' ', 1);
+				$messagewords = explode(" ", $message);
+				$partsofspeech[1] = "ver";
+				$partsofspeech[2] = "oth";
+				$partsofspeech[3] = "nou";
+				//Adjectives
+				for($n = 4; $n<sizeof($messagewords); $n++)
+				{
+					$partsofspeech[$n] = "adj";
+				}
+			}
+			else
+			{
+				//Verb
+				$verb = "@tobe";
+				$message = substrToStrpos($message, ' li ', 4).$verb." e ".substrFromStrpos($message,' li ',4);
+				$messagewords = explode(" ", $message);
+				$partsofspeech[array_search("li", $messagewords)+1] = "ver";
+				//Subject + Adjectives
+				$subject = substr($message, 0, strpos($message, ' li '));
+				$subjectwords = explode(" ", $subject);
+				$partsofspeech[0] = "nou";
+				for($x = 1; $x<sizeof($subjectwords); $x++)
+				{
+					$partsofspeech[$x] = "adj";
+				}
+				//Object + Adjectives
+				$object = substr($message, strpos($message, ' e ')+3);
+				$objectwords = explode(" ", $object);
+				$partsofspeech[array_search("e", $messagewords)] = "oth";
+				$partsofspeech[array_search("e", $messagewords)+1] = "nou";
+				for($y = array_search("e", $messagewords)+2; $y<array_search("e", $messagewords)+sizeof($objectwords)+1; $y++)
+				{
+					$partsofspeech[$y] = "adj";
+				}
+			}
 		}
 //--------------------------------------------RANK 2 MODIFICATIONS: LITERAL WORD REPLACEMENT AND P.O.S. ADDITION-------------------------------------------------------------------------------------------------------------------------------------------------------
 		$file = fopen("tkpepodict.txt", "r");
 		$dictwords = explode("\n", fread($file, filesize("tkpepodict.txt")));
 		$new = "";
 		$index = 0;
-		$punct = " ";
+		$punct = "";
 		foreach($messagewords as &$msgword)
 		{
 			if($msgword!="")
@@ -348,7 +407,7 @@
 				//Get rid of punctuation
 				if(preg_match("/[?.,;:]/", $msgword)==1)
 				{
-					$punct=substr($msgword, strlen($msgword)-1)." ";
+					$punct=substr($msgword, strlen($msgword)-1);
 					$msgword=substr($msgword, 0, strlen($msgword)-1);
 				}
 				$wordIsTranslatable = false;
@@ -358,7 +417,7 @@
 					{
 						$wordIsTranslatable = true;									//Know word is translatable
 						$new.=substr($dictword, strpos($dictword, ":")+1); 			//Append word to output
-						if(strpos($dictword, "-")>0) 								//If it needs an ending
+						if(strcont($dictword, "-")) 								//If it needs an ending
 						{  
 							$ending = "";
 							switch($partsofspeech[$index])							//Assign ending based on part of speech
@@ -415,8 +474,8 @@
 					$new.=$msgword;
 				}
 				//Add punctuation and space
-				$new.=$punct;
-				$punct = " ";
+				$new.=$punct." ";
+				$punct = "";
 			}
 			$index+=1;
 		}
