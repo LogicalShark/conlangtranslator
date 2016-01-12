@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Conlang Translator</title>
-	<link rel="stylesheet" href="translatorstyle.css" type="text/css">
+	<link rel="stylesheet" href="css/translatorstyle.css" type="text/css">
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/skeleton.css">
 	<meta charset="utf-8">
@@ -86,7 +86,6 @@
 		Permitted characters are the Latin Alphabet as well as<br> , . ; " ' \n(newline) &#293; &#285; &#309; &#265; &#365; &#349;<br>Currently available translations: simple toki pona to Esperanto, Ido to Esperanto.<br><br>
 		Made by Marcus Alder, 2015-2016.<br><br>
 		Translate Page:<br>
-		
 		<div id="google_translate_element"></div>
 		<script type="text/javascript">
 			function googleTranslateElementInit() 
