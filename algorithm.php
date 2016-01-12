@@ -6,7 +6,7 @@
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Languages					| nat = natural; con = constructed; tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Permitted characters 		| [ ], [a-z], [A-Z], [,.;"'], [\n], [ĥĝĵĉŭŝ]
+//Permitted characters 		| [ ], [a-z], [A-Z], [,.;"'], [\n], [ĥĝĵĉŭŝ]            @ = exception, * = currently unused
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Parts of Speech			| adj = adjective; adv = adverb; art = article; con = conjunction; int = interjection; nou = noun; pre = preposition; pro = pronoun; ver = verb; oth = other; alt = alternate translation
 //------------------------------------------------------------------------------------------------------------------------------------------
@@ -395,8 +395,8 @@
 			}
 		}
 //--------------------------------------------RANK 2 MODIFICATIONS: LITERAL WORD REPLACEMENT AND P.O.S. ADDITION-------------------------------------------------------------------------------------------------------------------------------------------------------
-		$file = fopen("tkpepodict.txt", "r");
-		$dictwords = explode("\n", fread($file, filesize("tkpepodict.txt")));
+		$file = fopen("dictionaries/tkpepodict.txt", "r");
+		$dictwords = explode("\n", fread($file, filesize("dictionaries/tkpepodict.txt")));
 		$new = "";
 		$index = 0;
 		$punct = "";
@@ -413,7 +413,7 @@
 				$wordIsTranslatable = false;
 				foreach($dictwords as &$dictword)
 				{
-					if(strpos($dictword, $msgword.":")==1)  						//If in the dictionary
+					if(strpos($dictword, $msgword.":")==1)  						//If in the tkpepo dictionary
 					{
 						$wordIsTranslatable = true;									//Know word is translatable
 						$new.=substr($dictword, strpos($dictword, ":")+1); 			//Append word to output
@@ -483,6 +483,23 @@
 		echo $prefixes.$new.$suffixes;
 		return $prefixes.$new.$suffixes;
 	}
+	function ilaepo($message)
+	{
+		$original = $message;
+		$words = preg_split("/ /", $original);
+		echo "asdf";
+		foreach($words as &$word)
+		{
+			$word = strtolower($word);
+			$html = getHTML("https://glosbe.com/ia/eo/$w", 5);
+			preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches);
+			echo $matches[2]." ";
+			$html = getHTML("https://glosbe.com/eo/en/$w", 5);
+			preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches);
+			$message = preg_replace("/ $word./", " $prefix$matches[2]$extras ", $message);
+		}
+		return $message;
+	}
 	function epotkp($message)
 	{
 		$original = $message;
@@ -494,9 +511,26 @@
 		$funct = '$lang'+'epo'; 		//Language to epo function
 		echo eponat($funct($message));	//Language to epo to nat
 	}
+	//Esperanto transitions
 	function epoepo($message)
 	{
 		return $message;
+	}
+	function tkpido($message)
+	{
+		return epoido(tkpepo($message));
+	}
+	function itotkp($message)
+	{
+		return epotkp(idoepo($message));
+	}
+	function ilatkp($message)
+	{
+		return epotkp(ilaepo($message));
+	}
+	function tkpila($message)
+	{
+		return epoila(tkpepo($message));
 	}
 	function eponat($message)
 	{
@@ -538,8 +572,9 @@
 		break;
 		default: $translatecode.="nat";
 	}
+	echo "asdf";
 	if($_POST['source']==$_POST['target'])
-	echo $message;
+		echo $message;
 	else if(substr($translatecode, 3)=="nat")
 		connat(substr($translatecode, 0,3), $message);
 	else

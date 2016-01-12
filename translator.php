@@ -2,9 +2,9 @@
 <html>
 <head>
 	<title>Conlang Translator</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="translatorstyle.css" type="text/css">
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/skeleton.css">
 	<meta charset="utf-8">
 	<script>
 	function translateText(response) 
@@ -20,35 +20,35 @@
 	<h2 style="font-size: 18px; text-indent: 10px;">Created by Marcus Alder</h2>
 	</div>
 	<font face="courier">
-	<div id="translator" class="greybox">
+	<div id="translator" class="container greybox">
 		<h1>Translator</h1><br>
-		<form method="POST" id="query">		
+		<form method="POST" id="query">
 		<textarea rows="5" cols="40" id="message" name="message" size="20" style="padding: 1px;" placeholder="Input Here"></textarea>
-		<br>
-
-		<button accesskey=c id="c" onClick="addC()" type="button">&#265;</button>
-		<button accesskey=g id="g" onClick="addG()" type="button">&#285;</button>
-		<button accesskey=h id="h" onClick="addH()" type="button">&#293;</button>
-		<button accesskey=j id="j" onClick="addJ()" type="button">&#309;</button>
-		<button accesskey=s id="s" onClick="addS()" type="button">&#349;</button>
-		<button accesskey=u id="u" onClick="addU()" type="button">&#365;</button>
-		<br><br>
-
-		<select name="source" id="source" size="1">
-		  <option selected="selected">toki pona</option>
-		  <option>English</option>
-		  <option>Esperanto</option>
-		  <option>Ido</option>
-		  <option>Interlingua</option>
-		</select>
-		<br>to<br>
-		<select name="target" id="target" size="1">
-		  <option>toki pona</option>
-		  <option>English</option>
-		  <option selected="selected">Esperanto</option>
-		  <option>Ido</option>
-		  <option>Interlingua</option>
-		</select>
+		<div class="row">
+			<button accesskey=c id="c" onClick="addC()" type="button">&#265;</button>
+			<button accesskey=g id="g" onClick="addG()" type="button">&#285;</button>
+			<button accesskey=h id="h" onClick="addH()" type="button">&#293;</button>
+			<button accesskey=j id="j" onClick="addJ()" type="button">&#309;</button>
+			<button accesskey=s id="s" onClick="addS()" type="button">&#349;</button>
+			<button accesskey=u id="u" onClick="addU()" type="button">&#365;</button>
+		</div>
+		<div class="row">
+				<select name="source" id="source" size="1">
+				  <option>toki pona</option>
+				  <option>English</option>
+				  <option>Esperanto</option>
+				  <option>Ido</option>
+				  <option selected="selected">Interlingua</option>
+				</select>
+				<br>to<br>
+				<select name="target" id="target" size="1">
+				  <option>toki pona</option>
+				  <option>English</option>
+				  <option selected="selected">Esperanto</option>
+				  <option>Ido</option>
+				  <option>Interlingua</option>
+				</select>
+		</div>
 		</form>
 		<script type="text/javascript">
 			//Adding Esperanto-specific characters
@@ -100,19 +100,19 @@
 	<div id="info" class="greybox grow">
 		<h1>Information</h1>
 		<br><br>
-		<p class="langname"><img src="esperanto.png" alt="Flag of Esperanto" class="langimg">Esperanto</p>
+		<p class="langname"><img src="images/esperanto.png" alt="Flag of Esperanto" class="langimg">Esperanto</p>
 		<a href="http://www.esperanto.net/veb/faq.html">Overview</a><br>
 		<a href="http://en.lernu.net">Lessons</a><br>
 		<a href="http://www.esperanto.net/info/index_en.html">Other Resources</a><br><br>
 
-		<p class="langname"><img src="tokipona.png" alt="Symbol of toki pona" class="langimg">toki pona</p>
+		<p class="langname"><img src="images/tokipona.png" alt="Symbol of toki pona" class="langimg">toki pona</p>
 		<a href="http://tokipona.org/">Official Site</a><br>
 		<a href="http://rowa.giso.de/languages/toki-pona/english/latex/index.html">Lessons</a><br>
 		<a href="https://aiki.pbworks.com/f/TP+words.pdf">Word List</a><br>
 		<a href="https://docs.google.com/spreadsheets/d/12gDr-zsUuwwCWPme9DlAE0JWuFDAFrqh3_IA257ff1U/edit#gid=0">Compound Word List</a><br>
 		<a href="http://tokipona.net/tp/default.aspx">Other Resources</a><br><br>
 
-		<p class="langname"><img src="ido.png" alt="Flag of Ido" class="langimg">Ido</p>
+		<p class="langname"><img src="images/ido.png" alt="Flag of Ido" class="langimg">Ido</p>
 		<a href="https://en.wikibooks.org/wiki/Easy_Ido">Lessons</a><br>
 		<a href="http://interlanguages.net/yindex.html">Resources 1</a><br>
 		<a href="http://idolinguo.org.uk/">Resources 2</a><br>
