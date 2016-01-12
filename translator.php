@@ -16,11 +16,11 @@
 <!-- <body background="conlang.png"> -->
 <body style="background-color:#91008c;">
 	<div id="header" class="greybox">
-	<h1 style="font-family: sans-serif; font-size: 40px;"><b>Constructed Language Resource Page<b></h1>
-	<h2 style="font-size: 18px; text-indent: 10px;">Created by Marcus Alder</h2>
+		<h1 style="font-family: sans-serif; font-size: 40px;"><b>Constructed Language Resource Page<b></h1>+
+		<h2 style="font-size: 18px; text-indent: 10px;">Created by Marcus Alder (Ignore temporary bad css)</h2>
 	</div>
 	<font face="courier">
-	<div id="translator" class="container greybox">
+	<div id="translator" class="greybox container">
 		<h1>Translator</h1><br>
 		<form method="POST" id="query">
 		<textarea rows="5" cols="90" id="message" name="message" size="20" style="padding: 1px;" placeholder="Input Here"></textarea>
@@ -72,7 +72,7 @@
 			newScript.src = source;
 			document.getElementsByTagName('head')[0].appendChild(newScript);
 		</script>
-		<input type="submit" value="Submit" name="submit" id="submit" accesskey="p">
+		<button class="button-primary" value="Submit" name="submit" id="submit" accesskey="p">Translate</button>
 		<br>
 		</font>
 		<br>
@@ -80,7 +80,7 @@
 		</div>
 	</div>
 	
-	<div id="about" class="greybox">
+	<div id="about" class="container greybox">
 	<h1>About</h1>
 		Translator instructions: choose a starting language, choose a target language, enter text, and press submit to translate.<br>
 		Permitted characters are the Latin Alphabet as well as<br> , . ; " ' \n(newline) &#293; &#285; &#309; &#265; &#365; &#349;<br>Currently available translations: simple toki pona to Esperanto, Ido to Esperanto.<br><br>
