@@ -23,7 +23,7 @@
 	<div id="translator" class="container greybox">
 		<h1>Translator</h1><br>
 		<form method="POST" id="query">
-		<textarea rows="5" cols="40" id="message" name="message" size="20" style="padding: 1px;" placeholder="Input Here"></textarea>
+		<textarea rows="5" cols="90" id="message" name="message" size="20" style="padding: 1px;" placeholder="Input Here"></textarea>
 		<div class="row">
 			<button accesskey=c id="c" onClick="addC()" type="button">&#265;</button>
 			<button accesskey=g id="g" onClick="addG()" type="button">&#285;</button>
@@ -99,7 +99,7 @@
 	<div id="info" class="greybox grow">
 		<h1>Information</h1>
 		<br><br>
-		<p class="langname"><img src="images/esperanto.png" alt="Flag of Esperanto" class="langimg">Esperanto</p>
+		<p class="one column"><img src="images/esperanto.png" alt="Flag of Esperanto" class="langimg">Esperanto</p>
 		<a href="http://www.esperanto.net/veb/faq.html">Overview</a><br>
 		<a href="http://en.lernu.net">Lessons</a><br>
 		<a href="http://www.esperanto.net/info/index_en.html">Other Resources</a><br><br>
