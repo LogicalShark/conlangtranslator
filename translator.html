@@ -1,4 +1,3 @@
-<!doctype html>
 <html>
 <head>
 	<title>Conlang Translator</title>
@@ -15,40 +14,41 @@
 </head>
 <!-- <body background="conlang.png"> -->
 <body style="background-color:#91008c;">
-	<div id="header" class="greybox">
-		<h1 style="font-family: sans-serif; font-size: 40px;"><b>Constructed Language Resource Page<b></h1>+
-		<h2 style="font-size: 18px; text-indent: 10px;">Created by Marcus Alder (Ignore temporary bad css)</h2>
+	
+	<div id="header" class="greybox container">
+		<h1><b>Conlang Translator and Information<b></h1>
+		<h3>Created by Marcus Alder</h3>
 	</div>
+	<br>
+	
 	<font face="courier">
 	<div id="translator" class="greybox container">
 		<h1>Translator</h1><br>
 		<form method="POST" id="query">
-		<textarea rows="5" cols="90" id="message" name="message" size="20" style="padding: 1px;" placeholder="Input Here"></textarea>
-		<div class="row">
-			<button accesskey=c id="c" onClick="addC()" type="button">&#265;</button>
-			<button accesskey=g id="g" onClick="addG()" type="button">&#285;</button>
-			<button accesskey=h id="h" onClick="addH()" type="button">&#293;</button>
-			<button accesskey=j id="j" onClick="addJ()" type="button">&#309;</button>
-			<button accesskey=s id="s" onClick="addS()" type="button">&#349;</button>
-			<button accesskey=u id="u" onClick="addU()" type="button">&#365;</button>
-		</div>
-		<div class="row">
+			<textarea id="message" name="message" size="20" style="padding: 1px; width:100%; height:100px;" placeholder="Input Here"></textarea>
+			<div class="row">
+				<button accesskey=c id="c" onClick="addC()" type="button">&#265;</button>
+				<button accesskey=g id="g" onClick="addG()" type="button">&#285;</button>
+				<button accesskey=h id="h" onClick="addH()" type="button">&#293;</button>
+				<button accesskey=j id="j" onClick="addJ()" type="button">&#309;</button>
+				<button accesskey=s id="s" onClick="addS()" type="button">&#349;</button>
+				<button accesskey=u id="u" onClick="addU()" type="button">&#251;</button>
 				<select name="source" id="source" size="1">
-				  <option>toki pona</option>
-				  <option>English</option>
-				  <option>Esperanto</option>
-				  <option>Ido</option>
-				  <option selected="selected">Interlingua</option>
+					<option>toki pona</option>
+					<option>English</option>
+					<option>Esperanto</option>
+					<option>Ido</option>
+					<option selected="selected">Interlingua</option>
 				</select>
-				<br>to<br>
+				to
 				<select name="target" id="target" size="1">
-				  <option>toki pona</option>
-				  <option>English</option>
-				  <option selected="selected">Esperanto</option>
-				  <option>Ido</option>
-				  <option>Interlingua</option>
+					<option>toki pona</option>
+					<option>English</option>
+					<option selected="selected">Esperanto</option>
+					<option>Ido</option>
+					<option>Interlingua</option>
 				</select>
-		</div>
+			</div>
 		</form>
 		<script type="text/javascript">
 			//Adding Esperanto-specific characters
@@ -63,7 +63,7 @@
 			function addS()
 			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u015D");}
 			function addU()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u016D");}
+			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u00FB");}
 			//Google Translate API usage
 		  	var newScript = document.createElement('script');
 			newScript.type = 'text/javascript';
@@ -79,11 +79,47 @@
 		<div id="output"> <!-- style = "display:none;" -->
 		</div>
 	</div>
+	<br>
+
+	<div class="greybox container">
+	<h1 id="info" style="text-align:center;">Information</h1>
 	
+	<div class="two columns">
+		<p class="langname"><img src="images/esperanto.png" alt="Flag of Esperanto" class="langimg">Esperanto</p>
+		<a href="http://www.esperanto.net/veb/faq.html">Overview</a><br>
+		<a href="http://en.lernu.net">Lessons</a><br>
+		<a href="http://www.esperanto.net/info/index_en.html">Other Resources</a><br>
+	</div>
+
+	<div class="three columns">
+	<p class="langname"><img src="images/tokipona.png" alt="Symbol of toki pona" class="langimg">toki pona</p>
+		<a href="http://tokipona.org/">Official Site</a><br>
+		<a href="http://rowa.giso.de/languages/toki-pona/english/latex/index.html">Lessons</a><br>
+		<a href="https://aiki.pbworks.com/f/TP+words.pdf">Word List</a><br>
+		<a href="https://docs.google.com/spreadsheets/d/12gDr-zsUuwwCWPme9DlAE0JWuFDAFrqh3_IA257ff1U/edit#gid=0">Compound Word List</a><br>
+		<a href="http://tokipona.net/tp/default.aspx">Other Resources</a><br>
+	</div>
+
+	<div class="two columns">
+		<p class="langname"><img src="images/ido.png" alt="Flag of Ido" class="langimg">Ido</p>
+		<a href="https://en.wikibooks.org/wiki/Easy_Ido">Lessons</a><br>
+		<a href="http://interlanguages.net/yindex.html">Resources 1</a><br>
+		<a href="http://idolinguo.org.uk/">Resources 2</a>
+	</div>
+
+	<div class="two columns">
+		<p class="langname"><img src="images/interlingua.png" alt="Flag of Interlingua" class="langimg">Interlingua</p>
+		<a href="http://www.interlingua.com/">Official Site</a><br>
+		<a href="http://members.optus.net/~ado_hall/interlingua/gi/home/preface.html">Grammar Summary</a>
+	</div>
+
+	</div>
+	<br>
+
 	<div id="about" class="container greybox">
 	<h1>About</h1>
 		Translator instructions: choose a starting language, choose a target language, enter text, and press submit to translate.<br>
-		Permitted characters are the Latin Alphabet as well as<br> , . ; " ' \n(newline) &#293; &#285; &#309; &#265; &#365; &#349;<br>Currently available translations: simple toki pona to Esperanto, Ido to Esperanto.<br><br>
+		Permitted characters are the Latin Alphabet as well as<br> , . ; " ' \n(newline) &#293; &#285; &#309; &#265; &#251; &#349;<br>Currently available translations: simple toki pona to Esperanto, Ido to Esperanto.<br><br>
 		Made by Marcus Alder, 2015-2016.<br><br>
 		Translate Page:<br>
 		<div id="google_translate_element"></div>
@@ -93,32 +129,12 @@
 				new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
 			}
 		</script>
-
 	</div>
-	
-	<div id="info" class="greybox grow">
-		<h1>Information</h1>
-		<br><br>
-		<p class="one column"><img src="images/esperanto.png" alt="Flag of Esperanto" class="langimg">Esperanto</p>
-		<a href="http://www.esperanto.net/veb/faq.html">Overview</a><br>
-		<a href="http://en.lernu.net">Lessons</a><br>
-		<a href="http://www.esperanto.net/info/index_en.html">Other Resources</a><br><br>
 
-		<p class="langname"><img src="images/tokipona.png" alt="Symbol of toki pona" class="langimg">toki pona</p>
-		<a href="http://tokipona.org/">Official Site</a><br>
-		<a href="http://rowa.giso.de/languages/toki-pona/english/latex/index.html">Lessons</a><br>
-		<a href="https://aiki.pbworks.com/f/TP+words.pdf">Word List</a><br>
-		<a href="https://docs.google.com/spreadsheets/d/12gDr-zsUuwwCWPme9DlAE0JWuFDAFrqh3_IA257ff1U/edit#gid=0">Compound Word List</a><br>
-		<a href="http://tokipona.net/tp/default.aspx">Other Resources</a><br><br>
-
-		<p class="langname"><img src="images/ido.png" alt="Flag of Ido" class="langimg">Ido</p>
-		<a href="https://en.wikibooks.org/wiki/Easy_Ido">Lessons</a><br>
-		<a href="http://interlanguages.net/yindex.html">Resources 1</a><br>
-		<a href="http://idolinguo.org.uk/">Resources 2</a><br>
-	</div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+	
 	<script type="text/javascript">
 		$(document).ready(function()
 		{
@@ -126,7 +142,7 @@
 			{
 			    $.post("algorithm.php", $("#query").serialize()).done(function(result)
 			    { 
-			    	$("#output").html(result.substring(10));
+			    	$("#output").html(result);
 			    	// document.getElementById("output").style="display:inline;";
 			    })
 			})
