@@ -1,0 +1,79 @@
+Linga bona
+Constructed language created by Marcus Alder, 11/9/15
+Grammar based on toki pona, vocabulary based on Interlingua/Latin
+
+---------------------------------------------------GRAMMMAR RULES---------------------------------------------------
+Alphabet:
+a,e,i,o,u
+b,d,f,g,j,k,l,m,n,p,r,s,t,w,v
+No tense, case, declension, conjucation, number, gender, dipthongs
+Word order: Subject e Verb e Object
+Numbers: binary
+---------------------------------------------------DICTIONARY---------------------------------------------------
+a:ah
+bon:good,easy,simple
+difer:difference,otherwise
+linga:language,word,speak,write
+nil:nothing
+sub:under,below,beneath,small,short,low,bottom
+tota:all,everything
+o:or
+i:and
+kwe:thing,stuff,object
+mal:bad,complex,evil
+util:tool,instrument,use,with
+in:inside,in,within
+anima:animal
+luma:light
+tena:have,own
+akwa:water,drink,liquid
+elemen:element,part,piece
+sona:sound,noise
+trania:strange,crazy,silly,unusual
+via:way,manner,doctrine
+kasa:happen,cause
+planta:plant,fungus
+simile:similar,also,too
+dura:hard,rock,metal
+gum:paste,gel,gum
+multa:group,community,many
+duca:lead,head,leader
+vesta:cloth,clothing
+ambien:environment,outside
+lina:line,thin thing
+papir:flat,paper,money
+eksis:exist
+vor:see,watch
+aperta:open,opening,hole,window,door,start
+ter:land,earth,country
+origen:origin,parent
+femin:female
+masca:male
+mi:I,me
+tu:you
+consum:eat,consume,use up,ingest
+fin:end,death,back
+sirka:circle,sphere
+joko:fun,entertainment
+numer:number
+cola:bump,hill
+ni:this,that
+o:hey,vocative
+vile:want,desire,like,love
+al:he,she,one,it
+ero:mistake,error,bad word
+acta:activity,action,do
+branca:branch,rod,stick
+emit:emit,release
+de:of
+senta:emotion,feeling
+lata:side,with,next to
+conta:container
+energi:energy,heat
+kwa:what,which
+---------------------------------------------------EXTENDED DICTIONARY---------------------------------------------------
+anima akwa:fish
+elemen 100: periodic element number
+luma sub:low-energy light, red
+luma :high-energy light, violet
+luma 1101101011: wavelength of light
