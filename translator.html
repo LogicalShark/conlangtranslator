@@ -25,7 +25,7 @@
 	<div id="translator" class="greybox container">
 		<h1>Translator</h1><br>
 		<form method="POST" id="query">
-			<textarea id="message" name="message" size="20" style="padding: 1px; width:100%; height:100px;" placeholder="Input Here"></textarea>
+			<textarea id="input" name="input" size="20" style="padding: 1px; width:100%; height:100px;" placeholder="Input Here"></textarea>
 			<div class="row">
 				<button accesskey=c id="c" onClick="addC()" type="button">&#265;</button>
 				<button accesskey=g id="g" onClick="addG()" type="button">&#285;</button>
@@ -34,11 +34,12 @@
 				<button accesskey=s id="s" onClick="addS()" type="button">&#349;</button>
 				<button accesskey=u id="u" onClick="addU()" type="button">&#251;</button>
 				<select name="source" id="source" size="1">
+					<option selected="selected">Detect Language</option>
 					<option>toki pona</option>
 					<option>English</option>
 					<option>Esperanto</option>
 					<option>Ido</option>
-					<option selected="selected">Interlingua</option>
+					<option>Interlingua</option>
 				</select>
 				to
 				<select name="target" id="target" size="1">
@@ -53,21 +54,21 @@
 		<script type="text/javascript">
 			//Adding Esperanto-specific characters
 			function addC()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u0109");}
+			{document.getElementById("input").value = (document.getElementById("input").value).concat("\u0109");}
 			function addG()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u011D");}
+			{document.getElementById("input").value = (document.getElementById("input").value).concat("\u011D");}
 			function addH()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u0125");}
+			{document.getElementById("input").value = (document.getElementById("input").value).concat("\u0125");}
 			function addJ()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u0135");}
+			{document.getElementById("input").value = (document.getElementById("input").value).concat("\u0135");}
 			function addS()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u015D");}
+			{document.getElementById("input").value = (document.getElementById("input").value).concat("\u015D");}
 			function addU()
-			{document.getElementById("message").value = (document.getElementById("message").value).concat("\u00FB");}
+			{document.getElementById("input").value = (document.getElementById("input").value).concat("\u00FB");}
 			//Google Translate API usage
 		  	var newScript = document.createElement('script');
 			newScript.type = 'text/javascript';
-			var sourceText = escape(document.getElementById("message").innerHTML);
+			var sourceText = escape(document.getElementById("input").innerHTML);
 			var source = 'https://www.googleapis.com/language/translate/v2?key=YOUR-API-KEY&source=eo&target=en&callback=translateText&q=' + sourceText; //May have to change characters, e.g. space to %20
 			newScript.src = source;
 			document.getElementsByTagName('head')[0].appendChild(newScript);
@@ -136,6 +137,7 @@
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 	
 	<script type="text/javascript">
+		document.getElementById("input").focus();
 		$(document).ready(function()
 		{
 			$("#submit").click(function()

@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Languages					| nat = natural; con = constructed; tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua 
+//Languages					| nat = natural; con = constructed; det = detect; tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Permitted characters 		| [ ], [a-z], [A-Z], [,.;"'], [\n], [ĥĝĵĉŭŝ]            @ = exception, * = currently unused
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -48,10 +48,32 @@
 	{return substr($string, strpos($string, $target)+$addition);}
 	function strcont($string, $target)								//String contains
 	{return (strpos($string, $target)>0);}
+
+	function detectLanguage($message)
+	{
+		$dictTKP = fopen("dictionaries/tkplist.txt", "r");
+		$wordTotal = str_word_count($message);
+		$perTKP = 0;
+		$perEPO = 0;
+		$perIDO = 0;
+		$perILA = 0;
+		$perNAT = 0;
+		$wordsTKP = explode("\n", fread($file, filesize("dictionaries/tkplist.txt")));
+		for($wordsTKP as &$word)
+		{
+			$word = substrToStrpos($line, ":");
+			if(preg_match("/[ ^]$word/", $message))
+			{
+				$perTKP+=1;
+			}
+		}
+		fclose($file);
+		$perTKP = $perTKP/$wordTotal;
+	}
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------TRANSLATION FUNCTIONS------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	function idoepo($message)
+	function idoepo($message, $pr)
 	{
 		$original = $message;
 //------------------------------------------ADJECTIVES---------------------------------------------------------------------------------------------------------------------------------
@@ -101,6 +123,7 @@
 //------------------------------------------WORD REPLACEMENT---------------------------------------------------------------------------------------------------------------------------
 		//Split into words
 		$words = preg_split("/ /", $original);
+		$output = "";
 		foreach($words as &$word)
 		{
 			$word = strtolower($word);
@@ -175,14 +198,15 @@
 			}
 			$html = getHTML("https://glosbe.com/io/eo/$w", 5);
 			preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches);
-			echo $matches[2]." ";
-			// echo "word: $w<br>";
-			// echo "match: $matches[2]<br>";
-			$message = preg_replace("/ $word./", " $prefix$matches[2]$extras ", $message);
+			if($pr)
+			{
+				echo $matches[2]." ";
+			}
+			$output .= preg_replace($matches[2]." ");
 		}
-		return $message;
+		return $output;
 	}
-	function epoido($message)
+	function epoido($message, $pr)
 	{
 		$original = $message;
 		//Replace special characters
@@ -192,10 +216,13 @@
 		$message = preg_replace("/ŭ/", "w", $message);
 		$message = preg_replace("/ŝ/", "sh", $message);
 
-		echo $message;
+		if($pr)
+		{
+			echo $message;
+		}
 		return $message;
 	}
-	function tkpepo($message)
+	function tkpepo($message, $pr)
 	{
 		//Variable declaration
 		$original = $message;
@@ -219,9 +246,9 @@
 			$suffixes = " tiel";
 			$message = substr($message, 3);		
 		}
-		preg_match('/[A-Z]\w*(?=[ \.,;\n])/', $message, $matches);
-		print_r($matches);
-		$message = preg_replace('/jan [A-Z]\w*(?= )/', strval($matches[0][0]), $message);
+		// $matches = array();
+		// preg_match('/[A-Z]\w*(?=[ \.,;\n])/', $message, $matches);
+		// $message = preg_replace('/jan [A-Z]\w*(?= )/', strval($matches[0]), $message);
 		$message = preg_replace('/[0] =>/', '', $message);
 //------------------------------------------RANK 1 MODIFICATIONS: CLAUSE CLASSIFICATION------------------------------------------------------------------------------------------------
 		//Find tense/time
@@ -480,14 +507,17 @@
 			$index+=1;
 		}
 		fclose($file);
-		echo $prefixes.$new.$suffixes;
+		if($pr)
+		{
+			echo $prefixes.$new.$suffixes;
+		}
 		return $prefixes.$new.$suffixes;
 	}
-	function ilaepo($message)
+	function ilaepo($message, $pr)
 	{
 		$original = $message;
+		$output = "";
 		$words = preg_split("/ /", $original);
-		echo "asdf";
 		foreach($words as &$word)
 		{
 			$word = strtolower($word);
@@ -522,63 +552,101 @@
 			$matches = array();
 			$html = getHTML("https://glosbe.com/ia/eo/$w", 5);
 			preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches);
-			echo $matches[2]." ";
+			if($pr)
+			{
+				echo $matches[2]." ";
+			}
+			$output.=$matches[2]." ";
 			$html = getHTML("https://glosbe.com/eo/en/$w", 5);
 			preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches);
 			$message = preg_replace("/ $word./", " $prefix$matches[2]$extras ", $message);
 		}
-		return $message;
+		return $output;
 	}
-	function epotkp($message)
+	function epotkp($message, $pr)
 	{
 		$original = $message;
-		echo $message;
+		if($pr)
+		{
+			echo $message;
+		}
 		return $message;
 	}
-	function connat($lang, $message)
+	function connat($lang, $message, $pr)
 	{
 		$funct = '$lang'+'epo'; 		//Language to epo function
-		echo eponat($funct($message));	//Language to epo to nat
+		if($pr)
+		{
+			echo eponat($funct($message, 0), 1);	//Language to epo to nat
+		}
 	}
 	//Esperanto transitions
-	function epoepo($message)
+	function tkpido($message, $pr)
 	{
-		return $message;
+		return epoido(tkpepo($message, 0), 1);
 	}
-	function tkpido($message)
+	function itotkp($message, $pr)
 	{
-		return epoido(tkpepo($message));
+		return epotkp(idoepo($message, 0), 1);
 	}
-	function itotkp($message)
+	function ilatkp($message, $pr)
 	{
-		return epotkp(idoepo($message));
+		return epotkp(ilaepo($message, 0), 1);
 	}
-	function ilatkp($message)
+	function tkpila($message, $pr)
 	{
-		return epotkp(ilaepo($message));
+		return epoila(tkpepo($message, 0), 1);
 	}
-	function tkpila($message)
-	{
-		return epoila(tkpepo($message));
-	}
-	function eponat($message)
+	function eponat($message, $pr)
 	{
 		// INFO HERE
 		// https://cloud.google.com/translate/v2/using_rest#Translate
 		// Done in javascript on translator.php
 		return $message;
 	}
-	function natepo($message)
+	function natepo($message, $pr)
 	{
 		// INFO HERE
 		// https://cloud.google.com/translate/v2/using_rest#Translate
 		// Done in javascript on translator.php
 		return $message;
 	}
-	$message = $_POST["message"];
+	function dettkp($message, $pr)
+	{
+		$function = detectLanguage($message)."tkp";
+		$function($message, $pr);
+	}
+	function detepo($message, $pr)
+	{
+		$function = detectLanguage($message)."epo";
+		$function($message, $pr);
+	}
+	function detido($message, $pr)
+	{
+		$function = detectLanguage($message)."ido";
+		$function($message, $pr);
+	}
+	function detila($message, $pr)
+	{
+		$function = detectLanguage($message)."ila";
+		$function($message, $pr);
+	}
+	function detnat($message, $pr)
+	{
+		$function = detectLanguage($message)."nat";
+		$function($message, $pr);
+	}
+	function detcon($message, $pr)
+	{
+		$function = detectLanguage($message)."con";
+		$function($message, $pr);
+	}
+	$message = $_POST["input"];
 	$translatecode = "";
 	switch($_POST['source'])
 	{
+		case "Detect Language": $translatecode.="det";
+		break;
 		case "toki pona": $translatecode.="tkp";
 		break;
 		case "Esperanto": $translatecode.="epo";
@@ -601,11 +669,10 @@
 		break;
 		default: $translatecode.="nat";
 	}
-	echo "asdf";
 	if($_POST['source']==$_POST['target'])
 		echo $message;
 	else if(substr($translatecode, 3)=="nat")
 		connat(substr($translatecode, 0,3), $message);
 	else
-		$translatecode($message);
+		$translatecode($message, 1);
 ?>
