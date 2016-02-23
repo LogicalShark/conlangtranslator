@@ -1,27 +1,28 @@
 <?php
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//----------------------------------------GLOBAL NAMING CONVENTIONS REFERENCE----------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------REFERENCE----------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+//Coding 					| $pr tells you if you need to print the function output
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Languages					| nat = natural; con = constructed; det = detect; tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Permitted characters 		| [ ], [a-z], [A-Z], [,.;"'], [\n], [ĥĝĵĉŭŝ]            @ = exception, * = currently unused
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Parts of Speech			| adj = adjective; adv = adverb; art = article; con = conjunction; int = interjection; nou = noun; pre = preposition; pro = pronoun; ver = verb; oth = other; alt = alternate translation
-//------------------------------------------------------------------------------------------------------------------------------------------
+//Parts of Speech			| adj = adjective; adv = adverb; art = article; con = conjunction; int = interjection; nou = noun; pre = preposition; pro = pronoun; ver = verb
+//							| oth = other; alt = alternative translation
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Tense/time				| -1.0 pluperfect -.5 imperfect, -.3 yesterday, -.2 today, -.1 recently, 0 now, .1 soon, .2 today, .3 tomorrow, .5 future perfect, 1.0 future 
 //							| Morning = -0.05, Noon = +0.01, Night = +0.05
-//							| A long time: 2, a little time: -2
+//							| A long time 2, A short time -2
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Mood 						| 0:indicative, 1:subjunctive
+//Mood 						| 0 indicative, 1 subjunctive
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Voice 					| 0:active, 1:passive
+//Voice 					| 0 active, 1 passive
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Clause classification 	| [0]:tense, [1]:mood, [2]:voice
+//Clause classification 	| [0] tense, [1] mood, [2] voice
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// Example sentences
+// Test cases
 // tenpo pini la, jan pona li moku nasa e telo lili, anu seme?
 // En la pasinteco, ĉu homo bona manĝis frenze akvo malgranda?
 // In the past, did a good person crazily drink a little water?
@@ -32,7 +33,7 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------UTILITY FUNCTIONS----------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	function getHTML($url,$timeout) //Get HTML from website
+	function getHTML($url,$timeout) //Get HTML from website (don't mess with this)
 	{
 	       $ch = curl_init($url); // initialize curl with given url
 	       curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER["HTTP_USER_AGENT"]); // set  useragent
@@ -51,24 +52,52 @@
 
 	function detectLanguage($message)
 	{
+		//$wordTotal = str_word_count($message);
+		//Highest number of words in a language wins
+		//0 tkp, 1 epo, 2 ido, 3 ila, 4 nat
+		$counts = array(0=>0,1=>0,2=>0,3=>0,4=>0,5=>0);
+
+		//toki pona
 		$dictTKP = fopen("dictionaries/tkplist.txt", "r");
-		$wordTotal = str_word_count($message);
-		$perTKP = 0;
-		$perEPO = 0;
-		$perIDO = 0;
-		$perILA = 0;
-		$perNAT = 0;
 		$wordsTKP = explode("\n", fread($file, filesize("dictionaries/tkplist.txt")));
 		for($wordsTKP as &$word)
 		{
 			$word = substrToStrpos($line, ":");
 			if(preg_match("/[ ^]$word/", $message))
 			{
-				$perTKP+=1;
+				$counts[0]+=1;
 			}
 		}
 		fclose($file);
-		$perTKP = $perTKP/$wordTotal;
+
+		//Esperanto
+
+		//Ido
+
+		//Interlingua
+
+		//Other?
+
+		//Find winner
+		switch(max($counts))
+		{
+			case $counts[0]:
+			$lang = "tkp";
+			break; 
+			case $counts[1]:
+			$lang = "epo";
+			break;
+			case $counts[2]:
+			$lang = "ido";
+			break;
+			case $counts[4]:
+			$lang = "ila";
+			break;
+			case $counts[5]:
+			$lang = "nat";
+			break;
+		}
+		return $lang
 	}
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------TRANSLATION FUNCTIONS------------------------------------------------------------------------------------------------------------------------
@@ -76,9 +105,9 @@
 	function idoepo($message, $pr)
 	{
 		$original = $message;
-//------------------------------------------ADJECTIVES---------------------------------------------------------------------------------------------------------------------------------
+//ADJECTIVES
 		//Comparatives and superlatives are covered by the word replacement
-//------------------------------------------VERBS--------------------------------------------------------------------------------------------------------------------------------------
+//VERBS
 		//Change back ilu, elu, olu, onu
 		$message = preg_replace("/ilez/", "ilu", $message);
 		$message = preg_replace("/elez/", "elu", $message);
@@ -114,20 +143,20 @@
 		$message = preg_replace("/onta\Z/", "ont", $message);
 		$message = preg_replace("/onta\"/", "ont\"", $message);
 		$message = preg_replace("/onta\'/", "ont\'", $message);
-//------------------------------------------ADVERBS------------------------------------------------------------------------------------------------------------------------------------
+//ADVERBS
 		//Covered in word replacement
-//------------------------------------------PRONOUNS-----------------------------------------------------------------------------------------------------------------------------------
+//PRONOUNS
 		//Covered in word replacement and fixed by previous modifications
-//------------------------------------------PREPOSITIONS-------------------------------------------------------------------------------------------------------------------------------
+//PREPOSITIONS
 		//Covered in word replacement
-//------------------------------------------WORD REPLACEMENT---------------------------------------------------------------------------------------------------------------------------
+//WORD REPLACEMENT
 		//Split into words
 		$words = preg_split("/ /", $original);
 		$output = "";
 		foreach($words as &$word)
 		{
 			$word = strtolower($word);
-//------------------------------------------PREFIXES-----------------------------------------------------------------------------------------------------------------------------------
+//PREFIXES
 			$prefix = "";
 
 			if(preg_match("/\Ades/", $word))
@@ -140,16 +169,18 @@
 				$word = substr($word, 3, strlen($word)-3);
 				$prefix='dis';
 			}
-//------------------------------------------SUFFIXES-----------------------------------------------------------------------------------------------------------------------------------
-//------------------------------------------ENDINGS------------------------------------------------------------------------------------------------------------------------------------
+//SUFFIXES AND ENDINGS
+			//TODO
 			$extras = "";
-//NOUNS		//Replace plural -i with -oj
+//NOUNS		
+			//Replace plural -i with -oj
 			if(preg_match("/i(\Z|\.|\'|\"|;|:|\?|\!)/", $word)&&strpos($word, "ni")!=0&&strpos($word, "vi")!=0&&strpos($word, "li")!=0)//Don't include pronouns ni, vi, li
 			{
 				$word = preg_replace("/i(\Z|\.|\'|\"|;|:|\?|\!)/", "o", $word);
 				$extras.='oj';
 			}
-//VERBS		//Replace imperative -ez with -u
+//VERBS		
+			//Replace imperative -ez with -u
 			else if(preg_match("/ez(\Z|\.|\'|\"|;|:|\?|\!)/", $word))
 			{
 				$word = preg_replace("/ez(\Z|\.|\'|\"|;|:|\?|\!)/", "ar", $word);
@@ -167,7 +198,7 @@
 				$word = preg_replace("/ez(\Z|\.|\'|\"|;|:|\?|\!)/", "ar", $word);
 				$extras.='u';
 			}
-//------------------------------------------PUNCTUATION--------------------------------------------------------------------------------------------------------------------------------
+//PUNCTUATION
 			if(strcont($word, '.'))
 			{
 				$w = substr($word, 0, strlen($word)-1);
