@@ -108,6 +108,9 @@
 //ADJECTIVES
 		//Comparatives and superlatives are covered by the word replacement
 //VERBS
+
+		//redo the more efficient regex that I lost eventually
+
 		//Change back ilu, elu, olu, onu
 		$message = preg_replace("/ilez/", "ilu", $message);
 		$message = preg_replace("/elez/", "elu", $message);
