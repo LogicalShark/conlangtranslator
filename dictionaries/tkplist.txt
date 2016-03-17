@@ -1,11 +1,13 @@
 a
 akesi
 ala
-ale,ali
+ale
+ali
 anpa
 ante
 anu
 awen
+e
 en
 ijo
 ike
@@ -17,7 +19,6 @@ jelo
 jo
 kama
 kala
-kalama
 kalama
 kama
 kasi
@@ -36,6 +37,7 @@ laso
 lawa
 len
 lete
+li
 lili
 linja
 lipu
@@ -80,7 +82,6 @@ pini
 pipi
 poka
 poki
-pona
 pona
 sama
 seli

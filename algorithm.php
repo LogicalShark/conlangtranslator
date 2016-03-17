@@ -52,52 +52,125 @@
 
 	function detectLanguage($message)
 	{
-		//$wordTotal = str_word_count($message);
+		$wordTotal = str_word_count($message);
 		//Highest number of words in a language wins
 		//0 tkp, 1 epo, 2 ido, 3 ila, 4 nat
 		$counts = array(0=>0,1=>0,2=>0,3=>0,4=>0,5=>0);
 
+		//Check for things only found in one language
+		if(preg_match("/ĝ|ĥ|ĵ|ĉ|ŭ|ŝ/", $message))
+		{
+			return "epo";
+		}
+		if(preg_match("/( |^)mal\w+/", $message))
+		{
+			return "epo";
+		}
+		//Find words matching each language
 		//toki pona
 		$dictTKP = fopen("dictionaries/tkplist.txt", "r");
-		$wordsTKP = explode("\n", fread($file, filesize("dictionaries/tkplist.txt")));
-		for($wordsTKP as &$word)
+		$wordsTKP = explode("\n", fread($dictTKP, filesize("dictionaries/tkplist.txt")));
+		foreach($wordsTKP as &$line)
 		{
-			$word = substrToStrpos($line, ":");
-			if(preg_match("/[ ^]$word/", $message))
+			$word = substr($line, 0, strlen($line)-1);
+			if(preg_match("/(^| )$word( |,|'|;|\"|\Z)/", $message))
 			{
 				$counts[0]+=1;
 			}
 		}
-		fclose($file);
-
+		fclose($dictTKP);
+		// if($counts[0] >= $wordTotal)
+		// {
+		// 	return "tkp";
+		// }
+		// echo $counts[0]."tkp\n";
 		//Esperanto
+		$dictEPO = fopen("dictionaries/epodict.txt", "r");
+		$wordsEPO = explode("\n", fread($dictEPO, filesize("dictionaries/epodict.txt")));
+		foreach($wordsEPO as &$line)
+		{
+			$word = substrToStrpos($line, ":");
+			if(preg_match("/(^| )$word( |,|'|;|\"|\Z)/", $message))
+			{
+				$counts[1]+=1;
+			}
+		}
+		fclose($dictEPO);
+		// if($counts[1] >= $wordTotal)
+		// {
+		// 	return "epo";
+		// }
 
+		// echo $counts[1]."epo\n";
 		//Ido
+		$dictIDO = fopen("dictionaries/idodict2.txt", "r");
+		$wordsIDO = explode("\n", fread($dictIDO, filesize("dictionaries/idodict2.txt")));
+		foreach($wordsIDO as &$line)
+		{
+			$word = substrToStrpos($line, ":");
+			if(preg_match("/(^| )$word( |,|'|;|\"|\Z)/", $message))
+			{
+				$counts[2]+=1;
+			}
+		}
+		fclose($dictIDO);
+		// if($counts[2] >= $wordTotal)
+		// {
+		// 	return "ido";
+		// }
+
+		// echo $counts[2]."ido\n";
 
 		//Interlingua
+		$dictILA = fopen("dictionaries/iladict.txt", "r");
+		$wordsILA = explode("\n", fread($dictILA, filesize("dictionaries/iladict.txt")));
+		foreach($wordsILA as &$line)
+		{
+			$word = substrToStrpos($line, " ");
+			if(preg_match("/(^| )$word( |,|'|;|\"|\Z)/", $message))
+			{
+				$counts[3]+=1;
+			}
+		}
+		fclose($dictILA);
 
+		// if($counts[3] >= $wordTotal)
+		// {
+		// 	return "ila";
+		// }
+
+		// echo $counts[3]."ila\n";
 		//Other?
 
 		//Find winner
-		switch(max($counts))
+		$max = 0;
+		for($x = 0; $x<4; $x++)
 		{
-			case $counts[0]:
+			// echo $x." ".$counts[$x]."<br>";
+			if($counts[$x]>$counts[$max])
+				$max = $x;
+		}	
+		switch($max)
+		{
+			case 0:
 			$lang = "tkp";
 			break; 
-			case $counts[1]:
+			case 1:
 			$lang = "epo";
 			break;
-			case $counts[2]:
+			case 2:
 			$lang = "ido";
 			break;
-			case $counts[4]:
+			case 3:
 			$lang = "ila";
 			break;
-			case $counts[5]:
+			// case $counts[5]:
+			// $lang = "nat";
+			// break;
+			default:
 			$lang = "nat";
-			break;
 		}
-		return $lang
+		return $lang;
 	}
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------TRANSLATION FUNCTIONS------------------------------------------------------------------------------------------------------------------------
@@ -105,8 +178,10 @@
 	function idoepo($message, $pr)
 	{
 		$original = $message;
+
 //ADJECTIVES
 		//Comparatives and superlatives are covered by the word replacement
+
 //VERBS
 
 		//redo the more efficient regex that I lost eventually
@@ -231,12 +306,14 @@
 				$w = $word;
 			}
 			$html = getHTML("https://glosbe.com/io/eo/$w", 5);
-			preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches);
-			if($pr)
+			if(preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches))
 			{
-				echo $matches[2]." ";
+				if($pr)
+				{
+					echo $matches[2]." ";
+				}
+				$output .= $matches[2]." ";
 			}
-			$output .= preg_replace($matches[2]." ");
 		}
 		return $output;
 	}
@@ -554,46 +631,34 @@
 		$words = preg_split("/ /", $original);
 		foreach($words as &$word)
 		{
+			$extras='';
 			$word = strtolower($word);
+			$w = substr($word, 0, strlen($word)-1);
 			if(strcont($word, '.'))
-			{
-				$w = substr($word, 0, strlen($word)-1);
 				$extras.='.';
-			}
 			else if(strcont($word, ','))
-			{
-				$w = substr($word, 0, strlen($word)-1);
 				$extras.=',';
-			}
 			else if(strcont($word, ';'))
-			{
-				$w = substr($word, 0, strlen($word)-1);			
 				$extras.=';';
-			}
 			else if(strcont($word, '\"'))
-			{
-				$w = substr($word, 0, strlen($word)-1);			
 				$extras.='\"';
-			}
 			else if(strcont($word, '\n'))
-			{
-				$w = substr($word, 0, strlen($word)-1);			
-			}
+				{}
 			else
-			{
 				$w = $word;
-			}
-			$matches = array();
-			$html = getHTML("https://glosbe.com/ia/eo/$w", 5);
-			preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches);
-			if($pr)
+			echo $w;
+			$html = getHTML("https://glosbe.com/ia/eo/$w", 20);
+			echo $html." ";
+			if(preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches))
 			{
-				echo $matches[2]." ";
+				echo "match";
+				if($pr)
+				{
+					echo $matches[2]." ";
+				}
+				$output.=$matches[2]." ";
+			
 			}
-			$output.=$matches[2]." ";
-			$html = getHTML("https://glosbe.com/eo/en/$w", 5);
-			preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches);
-			$message = preg_replace("/ $word./", " $prefix$matches[2]$extras ", $message);
 		}
 		return $output;
 	}
@@ -653,6 +718,12 @@
 	function detepo($message, $pr)
 	{
 		$function = detectLanguage($message)."epo";
+		if($function=="epoepo")
+		{
+			if($pr)
+				echo $message;
+			return $message
+		}
 		$function($message, $pr);
 	}
 	function detido($message, $pr)
