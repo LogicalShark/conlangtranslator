@@ -4,14 +4,14 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Coding 					| $pr tells you if you need to print the function output
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Languages					| nat = natural; con = constructed; det = detect; tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua 
+//Languages					| nat = natural; con = constructed; det = detect; tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Permitted characters 		| [ ], [a-z], [A-Z], [,.;"'], [\n], [ĥĝĵĉŭŝ]            @ = exception, * = currently unused
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Parts of Speech			| adj = adjective; adv = adverb; art = article; con = conjunction; int = interjection; nou = noun; pre = preposition; pro = pronoun; ver = verb
 //							| oth = other; alt = alternative translation
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Tense/time				| -1.0 pluperfect -.5 imperfect, -.3 yesterday, -.2 today, -.1 recently, 0 now, .1 soon, .2 today, .3 tomorrow, .5 future perfect, 1.0 future 
+//Tense/time				| -1.0 pluperfect -.5 imperfect, -.3 yesterday, -.2 today, -.1 recently, 0 now, .1 soon, .2 today, .3 tomorrow, .5 future perfect, 1.0 future
 //							| Morning = -0.05, Noon = +0.01, Night = +0.05
 //							| A long time 2, A short time -2
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -21,7 +21,8 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Clause classification 	| [0] tense, [1] mood, [2] voice
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+//Translate API 			| Google Translate REST API, Pricing: $1.00/5,000 chars
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Test cases
 // tenpo pini la, jan pona li moku nasa e telo lili, anu seme?
 // En la pasinteco, ĉu homo bona manĝis frenze akvo malgranda?
@@ -29,7 +30,8 @@
 // mi jan pona
 // mi estas homo bona
 // I am a good man
-
+//Patre nostre, qui es in le celos, que tu nomine sia sanctificate; que tu regno veni; que tu voluntate sia facite como in le celo, etiam super le terra.
+//Patro Nia, kiu estas en la ĉielo,	via nomo estu sanktigita. Venu via regno, plenumiĝu via volo, kiel en la ĉielo, tiel ankaŭ sur la tero.
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------UTILITY FUNCTIONS----------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -43,6 +45,7 @@
 	       curl_setopt($ch, CURLOPT_FAILONERROR, 1); // stop when it encounters an error
 	       return @curl_exec($ch);
 	}
+
 	function substrToStrpos($string, $target, $addition=0) 			//Substring up to a pattern
 	{return substr($string, 0, strpos($string, $target)+$addition);}
 	function substrFromStrpos($string, $target, $addition=0)		//Substring after a pattern
@@ -59,13 +62,9 @@
 
 		//Check for things only found in one language
 		if(preg_match("/ĝ|ĥ|ĵ|ĉ|ŭ|ŝ/", $message))
-		{
 			return "epo";
-		}
 		if(preg_match("/( |^)mal\w+/", $message))
-		{
 			return "epo";
-		}
 		//Find words matching each language
 		//toki pona
 		$dictTKP = fopen("dictionaries/tkplist.txt", "r");
@@ -154,7 +153,7 @@
 		{
 			case 0:
 			$lang = "tkp";
-			break; 
+			break;
 			case 1:
 			$lang = "epo";
 			break;
@@ -184,7 +183,7 @@
 
 //VERBS
 
-		//redo the more efficient regex that I lost eventually
+		//eventually redo the more efficient regex that I lost here
 
 		//Change back ilu, elu, olu, onu
 		$message = preg_replace("/ilez/", "ilu", $message);
@@ -233,6 +232,9 @@
 		$output = "";
 		foreach($words as &$word)
 		{
+			$caps = 0;
+			if($word!=strtolower($word))
+				$caps = 1;
 			$word = strtolower($word);
 //PREFIXES
 			$prefix = "";
@@ -277,42 +279,37 @@
 				$extras.='u';
 			}
 //PUNCTUATION
+			
+			$w = substr($word, 0, strlen($word)-1);
 			if(strcont($word, '.'))
-			{
-				$w = substr($word, 0, strlen($word)-1);
 				$extras.='.';
-			}
 			else if(strcont($word, ','))
-			{
-				$w = substr($word, 0, strlen($word)-1);
 				$extras.=',';
-			}
 			else if(strcont($word, ';'))
-			{
-				$w = substr($word, 0, strlen($word)-1);			
 				$extras.=';';
-			}
 			else if(strcont($word, '\"'))
-			{
-				$w = substr($word, 0, strlen($word)-1);			
 				$extras.='\"';
-			}
 			else if(strcont($word, '\n'))
-			{
-				$w = substr($word, 0, strlen($word)-1);			
-			}
+				$extras.='\n';
 			else
-			{
 				$w = $word;
-			}
+
 			$html = getHTML("https://glosbe.com/io/eo/$w", 5);
 			if(preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches))
 			{
 				if($pr)
 				{
-					echo $matches[2]." ";
+					echo $matches[2].$extras." ";
 				}
-				$output .= $matches[2]." ";
+				$output .= $matches[2].$extras." ";
+			}
+			else
+			{
+				if($pr)
+				{
+					echo $w.$extras." ";
+				}
+				$output .= $w.$extras." ";				
 			}
 		}
 		return $output;
@@ -335,6 +332,44 @@
 	}
 	function tkpepo($message, $pr)
 	{
+		if(count(explode(" ", $message))==1)
+		{
+			$file = fopen("dictionaries/tkpepodict.txt", "r");
+			$dictwords = explode("\n", fread($file, filesize("dictionaries/tkpepodict.txt")));
+			$new = "";
+			$punct = "";
+			$msgword = $message;
+			if($msgword!="")
+			{
+				//Get rid of punctuation
+				if(preg_match("/[?.,;:]/", $msgword)==1)
+				{
+					$punct=substr($msgword, strlen($msgword)-1);
+					$msgword=substr($msgword, 0, strlen($msgword)-1);
+				}
+				$wordIsTranslatable = false;
+				foreach($dictwords as &$dictword)
+				{
+					if(strpos($dictword, $msgword.":")==1)  						//If in the tkpepo dictionary
+					{
+						$wordIsTranslatable = true;									//Know word is translatable
+						$new.=substr($dictword, strpos($dictword, ":")+1); 			//Append word to output
+						if(strcont($new, "-"))
+							$new = substrToStrpos($new, "-")."o";
+					}
+				}
+				if(!$wordIsTranslatable && $msgword!="e" && $msgword!="li")			//Use original if no translation available
+				{
+					$new.=$msgword;
+				}
+				//Add punctuation
+				$new.=$punct;
+			}
+			fclose($file);
+			if($pr)
+				echo $new;
+			return $new;
+		}
 		//Variable declaration
 		$original = $message;
 		$partsofspeech = array();
@@ -532,7 +567,7 @@
 				}
 			}
 		}
-//--------------------------------------------RANK 2 MODIFICATIONS: LITERAL WORD REPLACEMENT AND P.O.S. ADDITION-------------------------------------------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------RANK 2 MODIFICATIONS: LITERAL WORD REPLACEMENT AND P.O.S. ADDITION-----------------------------------------------------------------------
 		$file = fopen("dictionaries/tkpepodict.txt", "r");
 		$dictwords = explode("\n", fread($file, filesize("dictionaries/tkpepodict.txt")));
 		$new = "";
@@ -556,7 +591,7 @@
 						$wordIsTranslatable = true;									//Know word is translatable
 						$new.=substr($dictword, strpos($dictword, ":")+1); 			//Append word to output
 						if(strcont($dictword, "-")) 								//If it needs an ending
-						{  
+						{
 							$ending = "";
 							switch($partsofspeech[$index])							//Assign ending based on part of speech
 							{
@@ -624,6 +659,7 @@
 		}
 		return $prefixes.$new.$suffixes;
 	}
+
 	function ilaepo($message, $pr)
 	{
 		$original = $message;
@@ -631,8 +667,12 @@
 		$words = preg_split("/ /", $original);
 		foreach($words as &$word)
 		{
-			$extras='';
+			$caps = 0;
+			if($word!=strtolower($word))
+				$caps = 1;
 			$word = strtolower($word);
+
+			$extras='';
 			$w = substr($word, 0, strlen($word)-1);
 			if(strcont($word, '.'))
 				$extras.='.';
@@ -643,25 +683,30 @@
 			else if(strcont($word, '\"'))
 				$extras.='\"';
 			else if(strcont($word, '\n'))
-				{}
+				$extras.='\n';
 			else
 				$w = $word;
-			echo $w;
 			$html = getHTML("https://glosbe.com/ia/eo/$w", 20);
-			echo $html." ";
 			if(preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches))
 			{
-				echo "match";
 				if($pr)
 				{
-					echo $matches[2]." ";
+					echo $matches[2].$extras." ";
 				}
-				$output.=$matches[2]." ";
-			
+				$output.=$matches[2].$extras." ";
+			}
+			else
+			{
+				if($pr)
+				{
+					echo $w.$extras." ";
+				}
+				$output.=$w.$extras." ";
 			}
 		}
 		return $output;
 	}
+
 	function epotkp($message, $pr)
 	{
 		$original = $message;
@@ -671,14 +716,39 @@
 		}
 		return $message;
 	}
+
+	//Natural languages
+	function eponat($message, $pr)
+	{
+		// Done in javascript on translator
+		$message = preg_replace( "/\r|\n/", "", $message);
+		echo "<script type='text/javascript'>translateNat(\"".$message."\");</script>";
+		return $message;
+	}
+	function natepo($message, $pr)
+	{
+		// Done in javascript on translator
+		$message = preg_replace( "/\r|\n/", "", $message);
+		echo "<script type='text/javascript'>translateNat(\"".$message."\");</script>";
+		return $message;
+	}
 	function connat($lang, $message, $pr)
 	{
-		$funct = '$lang'+'epo'; 		//Language to epo function
-		if($pr)
+		if($lang=="epo")
 		{
-			echo eponat($funct($message, 0), 1);	//Language to epo to nat
+			return eponat($message, $pr);
+		}
+		else
+		{
+			$funct = $lang."epo";				//Language to epo function
+			eponat($funct($message, 0), $pr);	//Language to epo to nat
 		}
 	}
+	function detnat($message, $pr)
+	{
+		connat(detectLanguage($message), $message, $pr);
+	}
+
 	//Esperanto transitions
 	function tkpido($message, $pr)
 	{
@@ -696,20 +766,8 @@
 	{
 		return epoila(tkpepo($message, 0), 1);
 	}
-	function eponat($message, $pr)
-	{
-		// INFO HERE
-		// https://cloud.google.com/translate/v2/using_rest#Translate
-		// Done in javascript on translator.php
-		return $message;
-	}
-	function natepo($message, $pr)
-	{
-		// INFO HERE
-		// https://cloud.google.com/translate/v2/using_rest#Translate
-		// Done in javascript on translator.php
-		return $message;
-	}
+
+	//Detect Language
 	function dettkp($message, $pr)
 	{
 		$function = detectLanguage($message)."tkp";
@@ -722,7 +780,7 @@
 		{
 			if($pr)
 				echo $message;
-			return $message
+			return $message;
 		}
 		$function($message, $pr);
 	}
@@ -734,16 +792,6 @@
 	function detila($message, $pr)
 	{
 		$function = detectLanguage($message)."ila";
-		$function($message, $pr);
-	}
-	function detnat($message, $pr)
-	{
-		$function = detectLanguage($message)."nat";
-		$function($message, $pr);
-	}
-	function detcon($message, $pr)
-	{
-		$function = detectLanguage($message)."con";
 		$function($message, $pr);
 	}
 	$message = $_POST["input"];
@@ -777,7 +825,7 @@
 	if($_POST['source']==$_POST['target'])
 		echo $message;
 	else if(substr($translatecode, 3)=="nat")
-		connat(substr($translatecode, 0,3), $message);
+		connat(substr($translatecode, 0, 3), $message, 1);
 	else
 		$translatecode($message, 1);
 ?>
