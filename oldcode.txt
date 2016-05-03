@@ -1,0 +1,212 @@
+
+
+			function translateText()
+			{
+				alert(document.getElementById("message").value);
+						// word = "parallel";
+			// html=getHTML("http://www.thesaurus.com/browse/{word}?s=t", 10);
+			// preg_match_all('/class="text">(\w+)<(?=(.*container-info antonyms))/', html, matches);
+			//for(x = 0; x<sizeof(matches[1]); x++)
+				//echo matches[1][x]."\n";
+			//tkp==toki pona; epo==esperanto; ido==ido; ila==interlingua; nat==natural
+			//permitted characters: [ ], [a-z], [A-Z], [,.;"'], [\n], [ĥĝĵĉŭŝ]
+				translatecode = "";
+				var starter = document.getElementById("starter").value
+				var target = document.getElementById("target").value
+				switch(starter)
+				{
+					case "toki pona": translatecode = "tkp";
+					break;
+					case "Esperanto": translatecode = "epo";
+					break;
+					case "Interlingua": translatecode = "ila";
+					break;
+					case "Ido": translatecode = "ido";
+					break;
+					default: translatecode = "nat";
+				}
+				switch(target)
+				{
+					case "toki pona": translatecode = translatecode.concat("tkp");
+					break;
+					case "Esperanto": translatecode =translatecode.concat("epo");
+					break;
+					case "Interlingua": translatecode = translatecode.concat("ila");
+					break;
+					case "Ido": translatecode = translatecode.concat("ido");
+					break;
+					default: translatecode = translatecode.concat("nat");
+				}
+				if(starter==target)
+					document.write(message);
+				else
+					translatecode(message);	
+			}
+
+			function httpGet(theUrl)
+			{
+			    if (window.XMLHttpRequest)
+			    {
+			        xmlhttp=new XMLHttpRequest();
+			    }
+			    else
+			    {
+			        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			    }
+			    xmlhttp.onreadystatechange=function()
+			    {
+			        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+			        {
+			            return xmlhttp.responseText;
+			        }
+			    }
+			    xmlhttp.open("GET", theUrl, false );
+			    xmlhttp.send();
+			}
+
+			function idoepo(message)
+			{
+				var original = message;
+//------------------------------------------ARTICLES------------------------------------------
+				//No change
+//------------------------------------------NOUNS---------------------------------------------
+				//Replace noun plural -i with -oj
+				var find = /i[ ;,\.\"\':']/g;
+				var result = find.exec(message);
+				message.replace(result, "j"+substr(result, 1))
+				console.log(result);
+//------------------------------------------ADJECTIVES------------------------------------------
+				//Comparatives and superlatives are covered by the word replacement
+//------------------------------------------VERBS-----------------------------------------------
+				//Replace verb inperative ending -ez with -u
+				var find = /ez[ ;,\.\"\':']/g;
+				var result = find.exec(message);
+				message = preg_replace("/ez /", "u ", message);
+				message = preg_replace("/ez;/", "u;", message);
+				message = preg_replace("/ez,/", "u,", message);
+				message = preg_replace("/ez\./", "u\.", message);
+				message = preg_replace("/ez\Z/", "u\Z", message);
+				message = preg_replace("/ez\"/", "u\"", message);
+				message = preg_replace("/ez\'/", "u\'", message);
+				//Replace verb infinitive ending -ar with -i
+				message = preg_replace("/ar /", "i ", message);
+				message = preg_replace("/ar;/", "i;", message);
+				message = preg_replace("/ar,/", "i,", message);
+				message = preg_replace("/ar\./", "i\.", message);
+				message = preg_replace("/ar\Z/", "i\Z", message);
+				message = preg_replace("/ar\"/", "i\"", message);
+				message = preg_replace("/ar\'/", "i\'", message);
+				//Replace verb participle endings .nta with .nt
+				message = preg_replace("/anta /", "ant ", message);
+				message = preg_replace("/anta;/", "ant;", message);
+				message = preg_replace("/anta,/", "ant,", message);
+				message = preg_replace("/anta\./", "ant\.", message);
+				message = preg_replace("/anta\Z/", "ant\Z", message);
+				message = preg_replace("/anta\"/", "ant\"", message);
+				message = preg_replace("/anta\'/", "ant\'", message);
+				message = preg_replace("/inta /", "int ", message);
+				message = preg_replace("/inta;/", "int;", message);
+				message = preg_replace("/inta,/", "int,", message);
+				message = preg_replace("/inta\./", "int\.", message);
+				message = preg_replace("/inta\Z/", "int\Z", message);
+				message = preg_replace("/inta\"/", "int\"", message);
+				message = preg_replace("/inta\'/", "int\'", message);
+				message = preg_replace("/onta /", "ont ", message);
+				message = preg_replace("/onta;/", "ont;", message);
+				message = preg_replace("/onta,/", "ont,", message);
+				message = preg_replace("/onta\./", "ont\.", message);
+				message = preg_replace("/onta\Z/", "ont\Z", message);
+				message = preg_replace("/onta\"/", "ont\"", message);
+				message = preg_replace("/onta\'/", "ont\'", message);
+//------------------------------------------ADVERBS-------------------------------------------
+				//Covered in word replacement
+//------------------------------------------PRONOUNS------------------------------------------
+				//Covered in word replacement
+//------------------------------------------PREPOSITIONS--------------------------------------
+				//Covered in word replacement
+//------------------------------------------WORD REPLACEMENT----------------------------------
+				//Split into words
+				words = preg_split("/ /", original);
+				for(word in words)
+				{
+					word = strtolower(word);
+					extras = "";
+					if(word.indexOf(',')>=0)
+					{
+						w = substr(word, 0, strlen(word)-1);
+						extras=',';
+					}
+					if(word.indexOf(';')>=0)
+					{
+						w = substr(word, 0, strlen(word)-1);			
+						extras=';';
+					}
+					if(word.indexOf('\"')>=0)
+					{
+						w = substr(word, 0, strlen(word)-1);			
+						extras='\"';
+					}
+					if(word.indexOf(' ')>=0)
+					{
+						w = substr(word, 0, strlen(word)-1);			
+					}
+					else
+						w = word;
+					html = getHTML("https://glosbe.com/io/eo/w", 5);
+					//echo html;
+					preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", html, matches);
+					document.write("word: word<br>");
+					document.write("match: matches[2]<br>");
+					message = preg_replace("/ word/", " matches[2]", message);
+				}
+				// alert(message);
+			}
+
+			function epoido(message)
+			{
+				original = message;
+				//Replace special characters
+				message = preg_replace("/ĥ/", "h", message);
+				message = preg_replace("/[ĝĵ]/", "j", message);
+				message = preg_replace("/ĉ/", "ch", message);
+				message = preg_replace("/ŭ/", "w", message);
+				message = preg_replace("/ŝ/", "sh", message);
+
+				document.write(message);
+			}
+
+			function tkpepo(message)
+			{
+				original = message;
+				newmsg = "";
+				if(preg_match('/anu seme\./', original))
+				{
+					newmsg = "ĉu ".newmsg;
+				}
+				if(preg_match('/kin\./', original))
+				{
+					newmsg = newmsg.concat(" tiel");
+				}
+				preg_match('/[A-Z]\w*(?=[ \.,;\n])/', message, matches);
+				print_r(matches);
+				message = preg_replace('/jan [A-Z]\w*(?= )/', matches[0][0], message);
+				subject = substr(message, 0, strpos(message, ' li '));
+				object = substr(message, strpos(message, ' e ')+3);
+				subjectwords = preg_split("/ /", subject);
+				for(word in subjectwords)
+				{
+
+				}
+				document.write(message);
+			}
+
+			function epotkp(message)
+			{
+				original = message;
+				document.write(message);
+			}
+		</script>
+
+
+
+	

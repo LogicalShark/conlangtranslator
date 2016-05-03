@@ -1,13 +1,15 @@
  ah:aĥ
  akesi:reptili-
+ alasa:serĉ-
  *ala:neni-
  ale:ĉi-
  ali:ĉi-
- anpa:fund-
+ anpa:malsupr-
  ante:malsam-
  anu:aŭ
  awen:rest-
  en:kaj
+ esun:butik-
  ijo:aĵ-
  ike:malbon-
  ilo:il-
@@ -65,7 +67,7 @@
  *alt*musi:lud-
  mute:mult-
  nanpa:nombr-
- nasa:frenz-
+ nasa:frenez-
  nasin:manier-
  nena:ĝib-
  ni:ĉi
@@ -103,7 +105,7 @@
  sijelo:korp-
  sike:rond-
  sin:nov-
- sina:oni
+ sina:vi
  sinpin:front-
  sitelen:desegn-
  sona:sci-
