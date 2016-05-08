@@ -19,7 +19,8 @@ function wikiPurify($raw)
 	$raw = preg_replace("/height:\d\d?\d?%/i", "", $raw);									//height
 	$raw = preg_replace("/table./i", "", $raw);												//table
 	$raw = preg_replace("/style((background)|(width)|(height)):\#(\w|,|;)+/i", "", $raw);	//stylebackground/width/height
-	$raw = preg_replace("/align((center)|(left)|(right))(\d+)?/i", "", $raw);				//align
+	$raw = preg_replace("/align((center)|(left)|(right)) (\d+)?/i", "", $raw);				//align
+	$raw = preg_replace("/align((center)|(left)|(right))/i", "", $raw);						//align2
 	$raw = preg_replace("/scale(major|minor) unit:\w+ increment:\d+ start:\d+/i", "", $raw);//scale
 	$raw = preg_replace("/legend position:/i", "", $raw);									//legend
 	$raw = preg_replace("/(layer)|(color)|(id):\w+/i", "", $raw);							//layer/color/id
