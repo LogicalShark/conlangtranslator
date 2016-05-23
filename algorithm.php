@@ -353,7 +353,9 @@
 				$extras.='\n';
 			else
 				$w = $word;
-
+			//https://glosbe.com/gapi/{function-name}[?[{function-parameter1}={value}[&{function-parameter2}={value}[&{function-parameter3}={value}...]]]]
+			// $xml = simplexml_load_file("https://glosbe.com/gapi/translate[?[from=eo[&dest=io[&phrase=".$w."[format=xml]]]]]");
+			// $wt = $xml->map->entry[1]->list->map->entry->string->com.google.common.collect.RegularImmutableMap->values;
 			$html = getHTML("https://glosbe.com/eo/io/$w", 5);
 			if(preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches))
 			{

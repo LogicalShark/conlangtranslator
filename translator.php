@@ -148,7 +148,8 @@
 			{
 				new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
 			}
-		</script><br>
+		</script>
+		<br>
 		Made by Marcus Alder 2015/2016.
 		</p>
 	</div>
