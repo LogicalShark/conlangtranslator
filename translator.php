@@ -28,6 +28,7 @@
 				<select name="source" id="source" size="1">
 					<option selected="selected">Detect Conlang</option>
 					<option>English</option>
+					<option>Deutsch</option>
 					<option>Esperanto</option>
 					<option>Ido</option>
 					<option>Interlingua</option>
@@ -37,11 +38,11 @@
 				to
 				<select name="target" id="target" size="1">
 					<option>English</option>
+					<option>Deutsch</option>
 					<option>Esperanto</option>
-					<option>Ido</option>
-					<option>Interlingua</option>
 					<option>Latin</option>
 					<option>toki pona</option>
+					<option>Ido</option>
 				</select>
 			</div>
 		</form>
@@ -52,7 +53,6 @@
 		<div id="output"> <!-- style = "display:none;" -->
 		</div>
 		<a href="mchains.php">Switch to text generator</a>
-
 		<script type="text/javascript">
 			//Adding Esperanto-specific characters
 			function addC()
@@ -73,12 +73,16 @@
 			{
 				document.getElementById("output").innerHTML = response.data.translations[0].translatedText;
 			}
-			function findLangCode(start)
+			function findLangCode(lang)
 			{
-				if(start=="English")
+				if(lang=="English")
 					return "en";
-				if(start=="Latin")
+				if(lang=="Latin")
 					return "la";
+				if(lang=="Deutsch")
+					return "de";
+				if(lang=="Francais") //&ccedil;
+					return "fr";
 				return "eo";
 			}
 			function translateNat(sourceText)
@@ -144,7 +148,8 @@
 			{
 				new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
 			}
-		</script><br>
+		</script>
+		<br>
 		Made by Marcus Alder 2015/2016.
 		</p>
 	</div>

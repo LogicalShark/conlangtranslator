@@ -48,15 +48,16 @@ if (isset($_POST['submit']))
 			<select class="two columns" name = "text" value="text">
 				<option selected="selected">Text</option>
 				<option>Esperanto Corpus</option>
-				<option>toki pona Corpus</option>
-				<option>Interlingua Corpus</option>
+				<option>English Corpus</option>
 				<option>Ido Corpus</option>
-				<option>De Bello Gallico I</option>
-				<option>Donald Trump Tweets</option>
-				<option>TJCrushes Posts</option>
+				<option>Interlingua Corpus</option>
+				<option>toki pona Corpus</option>
 				<option>1984 Full Text</option>
+				<option>De Bello Gallico I</option>
+				<option>Hearthstone Cards</option>
+				<option>TJCrushes Posts</option>
+				<option>Trump's Tweets</option>
 				<option>US University List</option>
-				<option></option>
 			</select>
 			<input type="submit" name="submit" value="Submit" class="three columns"/>
 			</div>

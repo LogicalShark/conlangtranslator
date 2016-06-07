@@ -1,40 +1,46 @@
 <?php
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------REFERENCE----------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------REFERENCE--------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
+
 //Coding 					| $pr tells you if you need to print the function output
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
 //Languages					| nat = natural; con = constructed; det = detect; tkp = toki pona; epo = esperanto; ido = ido; ila = interlingua
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
 //Permitted characters 		| [ ], [a-z], [A-Z], [,.;"'], [\n], [ĥĝĵĉŭŝ]            @ = exception, * = currently unused
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Parts of Speech			| adj = adjective; adv = adverb; art = article; con = conjunction; int = interjection; nou = noun; pre = preposition; pro = pronoun; ver = verb
-//							| oth = other; alt = alternative translation
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//Parts of Speech			| adj = adjective; adv = adverb; art = article; con = conjunction; int = interjection; nou = noun; pre = preposition; pro = pronoun; ver = verb; oth = other; alt = alternative translation
+//----------------------------------------------------------------------------------------------------------------------------------------------
 //Tense/time				| -1.0 pluperfect -.5 imperfect, -.3 yesterday, -.2 today, -.1 recently, 0 now, .1 soon, .2 today, .3 tomorrow, .5 future perfect, 1.0 future
 //							| Morning = -0.05, Noon = +0.01, Night = +0.05
 //							| A long time 2, A short time -2
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Mood 						| 0 indicative, 1 subjunctive
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//Mood 						| 0 indicative, 1 imperative, 2 subjunctive, 3 infinitive
+//----------------------------------------------------------------------------------------------------------------------------------------------
 //Voice 					| 0 active, 1 passive
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
 //Clause classification 	| [0] tense, [1] mood, [2] voice
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//Translate API 			| Google Translate REST API, Pricing: $1.00/5,000 chars
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//Translation APIs 			| Google Translate REST API, Pricing: $1.00/5,000 chars
+//							| Glosbe API
+//Text generator APIs 		| Wikimedia API
+//----------------------------------------------------------------------------------------------------------------------------------------------
 // Test cases
-// tenpo pini la, jan pona li moku nasa e telo lili, anu seme?
-// En la pasinteco, ĉu homo bona manĝis frenze akvo malgranda?
-// In the past, did a good person crazily drink a little water?
-// mi jan pona
-// mi estas homo bona
-// I am a good man
-//Patre nostre, qui es in le celos, que tu nomine sia sanctificate; que tu regno veni; que tu voluntate sia facite como in le celo, etiam super le terra.
-//Patro Nia, kiu estas en la ĉielo,	via nomo estu sanktigita. Venu via regno, plenumiĝu via volo, kiel en la ĉielo, tiel ankaŭ sur la tero.
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//----------------------------------------UTILITY FUNCTIONS----------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//Context awareness:
+	//mi moku e telo -vs- mi moku e moku
+	//Multiple subjects:
+	//jan li lukin li moku e telo
+	//Time
+	//tenpo pimeja ni la, sina lukin e moku
+
+//After extra li and e, make sure the part of speech is right
+//After pi make noun 
+//Compound words in toki pona:
+	//https://docs.google.com/spreadsheets/d/12gDr-zsUuwwCWPme9DlAE0JWuFDAFrqh3_IA257ff1U/edit#gid=0
+	//https://docs.google.com/spreadsheets/d/1qpN-x6g6LEXIllq5eIKkamL7dpsIcLzjOYpHSGCzHUs/edit?hl=en#gid=0
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------UTILITY FUNCTIONS-------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
 	function getHTML($url,$timeout) //Get HTML from website (don't mess with this)
 	{
 	       $ch = curl_init($url); // initialize curl with given url
@@ -63,7 +69,7 @@
 		//Check for things only found in one language
 		if(preg_match("/ĝ|ĥ|ĵ|ĉ|ŭ|ŝ/", $message))
 			return "epo";
-		if(preg_match("/( |^)mal\w+/", $message))
+		if(preg_match("/\bmal\w+\b/", $message))
 			return "epo";
 		//Find words matching each language
 		//toki pona
@@ -72,7 +78,7 @@
 		foreach($wordsTKP as &$line)
 		{
 			$word = substr($line, 0, strlen($line)-1);
-			if(preg_match("/(^| )$word( |,|'|;|\"|\Z)/", $message))
+			if(preg_match("/\b$word\b/", $message))
 			{
 				$counts[0]+=1;
 			}
@@ -89,7 +95,7 @@
 		foreach($wordsEPO as &$line)
 		{
 			$word = substrToStrpos($line, ":");
-			if(preg_match("/(^| )$word( |,|'|;|\"|\Z)/", $message))
+			if(preg_match("/\b$word\b/", $message))
 			{
 				$counts[1]+=1;
 			}
@@ -107,7 +113,7 @@
 		foreach($wordsIDO as &$line)
 		{
 			$word = substrToStrpos($line, ":");
-			if(preg_match("/(^| )$word( |,|'|;|\"|\Z)/", $message))
+			if(preg_match("/\b$word\b/", $message))
 			{
 				$counts[2]+=1;
 			}
@@ -163,63 +169,27 @@
 			case 3:
 			$lang = "ila";
 			break;
-			// case $counts[5]:
-			// $lang = "nat";
-			// break;
 			default:
 			$lang = "nat";
 		}
 		return $lang;
 	}
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//----------------------------------------TRANSLATION FUNCTIONS------------------------------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------TRANSLATION FUNCTIONS---------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------
 	function idoepo($message, $pr)
 	{
 		$original = $message;
-
 //ADJECTIVES
 		//Comparatives and superlatives are covered by the word replacement
-
 //VERBS
-
-		//eventually redo the more efficient regex that I lost here
-
 		//Change back ilu, elu, olu, onu
-		$message = preg_replace("/ilez/", "ilu", $message);
-		$message = preg_replace("/elez/", "elu", $message);
-		$message = preg_replace("/olez/", "olu", $message);
-		$message = preg_replace("/onez/", "onu", $message);
+		$matches = preg_match("/ez\b/", "u ", $message);
 		//Replace verb infinitive ending -ar with -i
-		$message = preg_replace("/ar /", "i ", $message);
-		$message = preg_replace("/ar;/", "i;", $message);
-		$message = preg_replace("/ar,/", "i,", $message);
-		$message = preg_replace("/ar\./", "i\.", $message);
-		$message = preg_replace("/ar\Z/", "i", $message);
-		$message = preg_replace("/ar\"/", "i\"", $message);
-		$message = preg_replace("/ar\'/", "i\'", $message);
+		$message = preg_replace("/ar\b/", "i ", $message);
 		//Replace verb participle endings .nta with .nt
-		$message = preg_replace("/anta /", "ant ", $message);
-		$message = preg_replace("/anta;/", "ant;", $message);
-		$message = preg_replace("/anta,/", "ant,", $message);
-		$message = preg_replace("/anta\./", "ant\.", $message);
-		$message = preg_replace("/anta\Z/", "ant", $message);
-		$message = preg_replace("/anta\"/", "ant\"", $message);
-		$message = preg_replace("/anta\'/", "ant\'", $message);
-		$message = preg_replace("/inta /", "int ", $message);
-		$message = preg_replace("/inta;/", "int;", $message);
-		$message = preg_replace("/inta,/", "int,", $message);
-		$message = preg_replace("/inta\./", "int\.", $message);
-		$message = preg_replace("/inta\Z/", "int", $message);
-		$message = preg_replace("/inta\"/", "int\"", $message);
-		$message = preg_replace("/inta\'/", "int\'", $message);
-		$message = preg_replace("/onta /", "ont ", $message);
-		$message = preg_replace("/onta;/", "ont;", $message);
-		$message = preg_replace("/onta,/", "ont,", $message);
-		$message = preg_replace("/onta\./", "ont\.", $message);
-		$message = preg_replace("/onta\Z/", "ont", $message);
-		$message = preg_replace("/onta\"/", "ont\"", $message);
-		$message = preg_replace("/onta\'/", "ont\'", $message);
+		$message = preg_replace("/nta\b/", "nt ", $message);
 //ADVERBS
 		//Covered in word replacement
 //PRONOUNS
@@ -238,48 +208,40 @@
 			$word = strtolower($word);
 //PREFIXES
 			$prefix = "";
-
-			if(preg_match("/\Ades/", $word))
+			if(preg_match("/\bdes/", $word))
 			{
 				$word = substr($word, 3, strlen($word)-3);
 				$prefix='des';
 			}
-			else if(preg_match("/\Adis/", $word))
+			else if(preg_match("/\bdis/", $word))
 			{
 				$word = substr($word, 3, strlen($word)-3);
 				$prefix='dis';
 			}
 //SUFFIXES AND ENDINGS
-			//TODO
 			$extras = "";
 //NOUNS		
 			//Replace plural -i with -oj
-			if(preg_match("/i(\Z|\.|\'|\"|;|:|\?|\!)/", $word)&&strpos($word, "ni")!=0&&strpos($word, "vi")!=0&&strpos($word, "li")!=0)//Don't include pronouns ni, vi, li
+			if(preg_match("/i\b/", $word))
 			{
-				$word = preg_replace("/i(\Z|\.|\'|\"|;|:|\?|\!)/", "o", $word);
-				$extras.='oj';
+				$word = preg_replace("/i\b/", "o", $word);
+				$extras.='j';
 			}
-//VERBS		
-			//Replace imperative -ez with -u
-			else if(preg_match("/ez(\Z|\.|\'|\"|;|:|\?|\!)/", $word))
-			{
-				$word = preg_replace("/ez(\Z|\.|\'|\"|;|:|\?|\!)/", "ar", $word);
-				$extras.='u';
-			}
+//VERBS
 			//Replace infinitive -ar with -i
-			else if(preg_match("/ar(\Z|\.|\'|\"|;|:|\?|\!)/", $word))
+			if(preg_match("/ar\b/", $word))
 			{
-				$word = preg_replace("/ar(\Z|\.|\'|\"|;|:|\?|\!)/", "i", $word);
+				$word = preg_replace("/ar\b/", "i", $word);
 				$extras.='ar';
 			}
 			//Replace imperative -ez with -u
-			else if(preg_match("/ez(\Z|\.|\'|\"|;|:|\?|\!)/", $word))
-			{
-				$word = preg_replace("/ez(\Z|\.|\'|\"|;|:|\?|\!)/", "ar", $word);
-				$extras.='u';
-			}
-//PUNCTUATION
+			// else if(preg_match("/ez\b/", $word))
+			// {
+			// 	$word = preg_replace("/ez\b/", "ar", $word);
+			// 	$extras.='u';
+			// }
 			
+//PUNCTUATION
 			$w = substr($word, 0, strlen($word)-1);
 			if(strcont($word, '.'))
 				$extras.='.';
@@ -299,9 +261,9 @@
 			{
 				if($pr)
 				{
-					echo $matches[2].$extras." ";
+					echo $prefix.$matches[2].$extras." ";
 				}
-				$output .= $matches[2].$extras." ";
+				$output .= $prefix.$matches[2].$extras." ";
 			}
 			else
 			{
@@ -309,26 +271,119 @@
 				{
 					echo $w.$extras." ";
 				}
-				$output .= $w.$extras." ";				
+				$output .= $prefix.$w.$extras." ";
 			}
+			$extras = "";
 		}
 		return $output;
 	}
 	function epoido($message, $pr)
 	{
 		$original = $message;
-		//Replace special characters
-		$message = preg_replace("/ĥ/", "h", $message);
-		$message = preg_replace("/[ĝĵ]/", "j", $message);
-		$message = preg_replace("/ĉ/", "ch", $message);
-		$message = preg_replace("/ŭ/", "w", $message);
-		$message = preg_replace("/ŝ/", "sh", $message);
-
-		if($pr)
+		
+//ADJECTIVES
+		//Comparatives and superlatives are covered by the word replacement
+// //VERBS
+// 		//Change back ilu, elu, olu, onu
+// 		$matches = preg_match("/ez\b/", "u ", $message);
+// 		//Replace verb infinitive ending -ar with -i
+// 		$message = preg_replace("/ar\b/", "i ", $message);
+// 		//Replace verb participle endings .nta with .nt
+// 		$message = preg_replace("/nta\b/", "nt ", $message);
+//ADVERBS
+		//Covered in word replacement
+//PRONOUNS
+		//Covered in word replacement and fixed by previous modifications
+//PREPOSITIONS
+		//Covered in word replacement
+//WORD REPLACEMENT
+		//Split into words
+		$words = preg_split("/ /", $original);
+		$output = "";
+		foreach($words as &$word)
 		{
-			echo $message;
+			$caps = 0;
+			if($word!=strtolower($word))
+				$caps = 1;
+			$word = strtolower($word);
+// //PREFIXES
+// 			$prefix = "";
+// 			if(preg_match("/\bdes/", $word))
+// 			{
+// 				$word = substr($word, 3, strlen($word)-3);
+// 				$prefix='des';
+// 			}
+// 			else if(preg_match("/\bdis/", $word))
+// 			{
+// 				$word = substr($word, 3, strlen($word)-3);
+// 				$prefix='dis';
+// 			}
+// //SUFFIXES AND ENDINGS
+			$extras = "";
+// //NOUNS		
+// 			//Replace plural -i with -oj
+// 			if(preg_match("/i\b/", $word))
+// 			{
+// 				$word = preg_replace("/i\b/", "o", $word);
+// 				$extras.='j';
+// 			}
+// //VERBS
+// 			//Replace infinitive -ar with -i
+// 			if(preg_match("/ar\b/", $word))
+// 			{
+// 				$word = preg_replace("/ar\b/", "i", $word);
+// 				$extras.='ar';
+// 			}
+			//Replace imperative -ez with -u
+			// else if(preg_match("/ez\b/", $word))
+			// {
+			// 	$word = preg_replace("/ez\b/", "ar", $word);
+			// 	$extras.='u';
+			// }
+//PUNCTUATION
+			
+			$w = substr($word, 0, strlen($word)-1);
+			if(strcont($word, '.'))
+				$extras.='.';
+			else if(strcont($word, ','))
+				$extras.=',';
+			else if(strcont($word, ';'))
+				$extras.=';';
+			else if(strcont($word, '\"'))
+				$extras.='\"';
+			else if(strcont($word, '\n'))
+				$extras.='\n';
+			else
+				$w = $word;
+			//https://glosbe.com/gapi/{function-name}[?[{function-parameter1}={value}[&{function-parameter2}={value}[&{function-parameter3}={value}...]]]]
+			// $xml = simplexml_load_file("https://glosbe.com/gapi/translate[?[from=eo[&dest=io[&phrase=".$w."[format=xml]]]]]");
+			// $wt = $xml->map->entry[1]->list->map->entry->string->com.google.common.collect.RegularImmutableMap->values;
+			$html = getHTML("https://glosbe.com/eo/io/$w", 5);
+			if(preg_match("/(?<=(phr\">))(\w+)(?=(<\/strong))/", $html, $matches))
+			{
+				if($pr)
+				{
+					echo $prefix.$matches[2].$extras." ";
+				}
+				$output .= $prefix.$matches[2].$extras." ";
+			}
+			else
+			{
+				if($pr)
+				{
+					echo $w.$extras." ";
+				}
+				$output .= $prefix.$w.$extras." ";
+			}
+			$extras = "";
 		}
-		return $message;
+		//Replace special characters
+		$output = preg_replace("/ĥ/", "h", $output);
+		$output = preg_replace("/[ĝĵ]/", "j", $output);
+		$output = preg_replace("/ĉ/", "ch", $output);
+		$output = preg_replace("/ŭ/", "w", $output);
+		$output = preg_replace("/ŝ/", "sh", $output);
+		return $output;
 	}
 	function tkpepo($message, $pr)
 	{
@@ -339,6 +394,7 @@
 			$new = "";
 			$punct = "";
 			$msgword = $message;
+			//One-word translations
 			if($msgword!="")
 			{
 				//Get rid of punctuation
@@ -358,7 +414,7 @@
 							$new = substrToStrpos($new, "-")."o";
 					}
 				}
-				if(!$wordIsTranslatable && $msgword!="e" && $msgword!="li")			//Use original if no translation available
+				if(!$wordIsTranslatable)			//Use original if no translation available
 				{
 					$new.=$msgword;
 				}
@@ -376,27 +432,37 @@
 		$clauseinfo = array();
 		for($x = 0; $x<4; $x++)
 			$clauseinfo[$x] = 0;
-//--------------------------------------------RANK 0 MODIFICATIONS: CONSTANTS----------------------------------------------------------------------------------------------------------
+//--------------------------------------------RANK 0 MODIFICATIONS: CONSTANTS------------------------------------------------------------------------
 		$prefixes = "";
 		$suffixes = "";
-		if(preg_match('/anu seme\?/', $original))//Yes or no question
+		if(preg_match('/anu seme\?/', $message))//Yes or no question
 		{
 			$prefixes = "ĉu ";
-			if(preg_match("/, anu seme\?/", $original))
+			if(preg_match("/, anu seme\?/", $message))
 				$message = substr($message, 0, strlen($message)-11)."?";
 			else
 				$message = substr($message, 0, strlen($message)-10)."?";
 		}
-		if(preg_match('/kin\./', $original))//As well/indeed
+		if(preg_match('/kin\./', $message))//As well/indeed
 		{
 			$suffixes = " tiel";
 			$message = substr($message, 3);		
 		}
+		if(preg_match('/^o\b/i', $message))//Imperative
+		{
+			$clauseinfo[1] = 1;
+		}
+		if(preg_match('/jan \w+ o\b/i', $message))//Vocative
+		{
+			$message = preg_replace("/\bo\b/i", "", $message);
+			$message = "o ".$message;
+		}
+
 		// $matches = array();
 		// preg_match('/[A-Z]\w*(?=[ \.,;\n])/', $message, $matches);
 		// $message = preg_replace('/jan [A-Z]\w*(?= )/', strval($matches[0]), $message);
 		$message = preg_replace('/[0] =>/', '', $message);
-//------------------------------------------RANK 1 MODIFICATIONS: CLAUSE CLASSIFICATION------------------------------------------------------------------------------------------------
+//------------------------------------------RANK 1 MODIFICATIONS: CLAUSE CLASSIFICATION---------------------------------------------------------------
 		//Find tense/time
 		$presentprefix = 0;//Default value is 0, if there is a "tenpo ni la" the tense stays 0 but a "now" needs to be added
 		if(preg_match('/tenpo .+ la/', $message))
@@ -417,7 +483,7 @@
 			if(preg_match('/tenpo pimeja ni la/', $message))//Tonight
 				$clauseinfo[0] =  0.25;
 			if(preg_match('/tenpo pimeja kama la/', $message))//Tonight (alt)
-				$clauseinfo[0] =  0.25;
+				$clauseinfo[0] =  0.35;
 			if(preg_match('/tenpo suno kama la/', $message))//Tomorrow
 				$clauseinfo[0] = .3;
 			if(preg_match('/tenpo pini kama la/', $message))//Future perfect?
@@ -439,7 +505,7 @@
 				$clauseinfo[0] = -2;
 			//Others can be added, this covers all the basic ones
 		}
-		$message = preg_replace('/tenpo .+ la. ?/', '', $message);//Get rid of "tenpo _ la"
+		$message = preg_replace('/tenpo .+ la. ?/', '', $message);//Get rid of the "tenpo _ la"
 		//Add prefixes to indicate time
 		switch($clauseinfo[0])
 		{
@@ -484,9 +550,7 @@
 				$prefixes = "Nun, ".$prefixes;
 			break;
 		}
-		//Find voice/mood
-		//?
-//------------------------------------------RANK 2 MODIFICATIONS: PART OF SPEECH IDENTIFICATION----------------------------------------------------------------------------------------
+//------------------------------------------RANK 2 MODIFICATIONS: PART OF SPEECH IDENTIFICATION-------------------------------------------------------
 		$messagewords = explode(" ", $message);
 		//Subject + Adjectives
 		$includesli = 3;
@@ -505,7 +569,7 @@
 			$partsofspeech[$x] = "adj";
 		}
 		//Verb + Adverbs
-		if(preg_match("/ e /", $original)!=false) //If it contains "e", i.e. not a "to be" sentence
+		if(preg_match("/ e /", $message)!=false) //If it contains "e", i.e. not a "to be" sentence
 		{
 			$verb = substr($message, strlen($subject) + $includesli, strpos($message, ' e ') - (strlen($subject) + $includesli));
 			$verbwords = explode(" ", $verb);
@@ -567,7 +631,307 @@
 				}
 			}
 		}
-//--------------------------------------------RANK 2 MODIFICATIONS: LITERAL WORD REPLACEMENT AND P.O.S. ADDITION-----------------------------------------------------------------------
+//--------------------------------------------RANK 2 MODIFICATIONS: LITERAL WORD REPLACEMENT AND P.O.S. ADDITION--------------------------------------
+		// $cfile = fopen("dictionaries/tkpcompound.txt", "r");
+		$file = fopen("dictionaries/tkpepodict.txt", "r");
+		$dictwords = explode("\n", fread($file, filesize("dictionaries/tkpepodict.txt")));
+		$new = "";
+		$index = 0;
+		$punct = "";
+		$includeLi = 0;
+		$includeE = 0;
+		foreach($messagewords as &$msgword)
+		{
+			if($msgword=="e" && !$includeE)
+				$includeE = 1;
+			else if($msgword=="li" && !$includeLi)
+				$includeLi = 1;
+			else if($msgword!="")
+			{
+				//Initialize variables
+				$wordIsTranslatable = false;
+				$altTranslate = 0;
+				//Get rid of punctuation
+				if(preg_match("/[?.,;:]/", $msgword)==1)
+				{
+					$punct=substr($msgword, strlen($msgword)-1);
+					$msgword=substr($msgword, 0, strlen($msgword)-1);
+				}
+				//Special cases
+				//Eat -> drink
+				if($msgword=="moku" && preg_match("/telo/", $message) && ($partsofspeech[$index]=="ver"||$partsofspeech[$index]=="adv"))
+					$altTranslate = 1;
+				//He -> she
+				if($msgword=="ona" && preg_match("/meli/", $message))
+					$altTranslate = 1;
+				//Normal translate
+				if(!$altTranslate)
+				{
+					foreach($dictwords as &$dictword)
+					{
+						$remove = 0;
+						if(strpos($dictword, $msgword.":")==1)  						//If in the tkpepo dictionary
+						{
+							$wordIsTranslatable = true;									//Know word is translatable
+							$new .= substr($dictword, strpos($dictword, ":")+1); 	//Word appended to output
+							if(strcont($dictword, "-")) 								//If it needs an ending
+							{
+								$ending = "";
+								switch($partsofspeech[$index])							//Assign ending based on part of speech
+								{
+									case "adj":
+									// if($msgword=="meli") //Gender suffix
+									// {
+									// 	$remove = 1;
+									// }
+									// else
+										$ending = "a";
+									break;
+									case "adv":
+									$ending = "e";
+									break;
+									case "nou":
+									$ending = "o";
+									break;
+									case "ver":
+									//Past
+									if(1>=$clauseinfo[0] && $clauseinfo[0]>0)
+									{
+										$ending = "os";
+									}
+									//Future
+									else if(-1<=$clauseinfo[0]  && $clauseinfo[0] <0)
+									{
+										$ending = "is";
+									}
+									//Present
+									else
+									{
+										$ending = "as";
+									}
+									if($clauseinfo[1] == 1)
+									{
+										$ending = "u";
+									}
+									break;
+									case "pre":
+									$ending = "";
+									break;
+									case "pro":
+									$ending = "";
+									break;
+									case "oth":
+									$ending = "";
+									break;
+									case "int":
+									$ending = "";
+									break;
+									default:
+									$ending = "";
+									break;
+								}
+								$new = substr($new, 0, strlen($new)-2);
+								if(!$remove)
+									$new.=$ending;
+							}//end if needs an ending
+						}//end if dictword match
+					}//end for dictwords
+				}//end not alttranslate
+				else
+				{
+					$msgword = "*alt*".$msgword;
+					foreach($dictwords as &$dictword)
+					{
+						if(strpos($dictword, $msgword.":")==1)  						//If in the tkpepo dictionary
+						{
+							$wordIsTranslatable = true;									//Know word is translatable
+							$root = substr($dictword, strpos($dictword, ":")+1); 	//Word appended to output
+							if(strcont($dictword, "-")) 								//If it needs an ending
+							{
+								$ending = "";
+								switch($partsofspeech[$index])							//Assign ending based on part of speech
+								{
+									case "adj":
+									$ending = "a";
+									break;
+									case "adv":
+									$ending = "e";
+									break;
+									case "nou":
+									$ending = "o";
+									break;
+									case "ver":
+									//Past
+									if(1>=$clauseinfo[0] && $clauseinfo[0]>0)
+									{
+										$ending = "os";
+									}
+									//Future
+									else if(-1<=$clauseinfo[0]  && $clauseinfo[0] <0)
+									{
+										$ending = "is";
+									}
+									//Present
+									else
+									{
+										$ending = "as";
+									}
+									if($clauseinfo[1] == 1)
+									{
+										$ending = "u";
+									}
+									break;
+									case "pre":
+									$ending = "";
+									break;
+									case "pro":
+									$ending = "";
+									break;
+									case "oth":
+									$ending = "";
+									break;
+									case "int":
+									$ending = "";
+									break;
+									default:
+									$ending = "";
+									break;
+								}
+								$new .= $root;
+								$new = substr($new, 0, strlen($new)-2);
+								$new.=$ending;
+							}//end if needs an ending
+						}//end if dictword match
+					}//end for dictwords					
+				}//end alttranslate
+				if(!$wordIsTranslatable && !$remove)
+					$new.=$msgword;
+				//Add punctuation and space
+				$new.=$punct." ";
+				$punct = "";
+			}//end if msgword!=""
+			$index+=1;
+		}
+		fclose($file);
+		if($pr)
+		{
+			echo $prefixes.$new.$suffixes;
+		}
+		return $prefixes.$new.$suffixes;
+	}
+
+	function epotkpWord($word)
+	{
+		//"http://www.thesaurus.com/browse/".$word."?s=t"
+		// $base = 'https://www.googleapis.com/language/translate/v2'.'?key=AIzaSyBoAUVrS3pBR4o6ii0tWBhDhC0Lkakq-RA';				//API Key
+		// $start = "eo";	//Starting lang
+		// $target = "en";	//Target lang
+		// $html = $base.'&source=eo&target=en&callback=translateText&q='.$word;					//Final string
+		// echo file_get_contents($html);
+
+		//find synonyms on dictionaries ("see also")
+	}
+
+	function epotkp($message, $pr)
+	{
+		if(count(explode(" ", $message))==1) //One-word queries
+		{
+			$output = epotkpWord($message);
+			if($pr)
+				echo $output;
+			return $output;
+		}
+		//Variable declaration
+		$original = $message;
+		$partsofspeech = array();
+		$clauseinfo = array();
+		for($x = 0; $x<4; $x++)
+			$clauseinfo[$x] = 0;
+//--------------------------------------------RANK 0 MODIFICATIONS: CONSTANTS---------------------------------------------------------------------------------------------------------
+		$prefixes = "";
+		$suffixes = "";
+		if(preg_match('/^ĉu\b/', $original))//Yes or no question
+		{
+			$suffixes = "anu seme?";
+			$message = substr($message, 3);
+		}
+		if(preg_match('/tiel\./', $original))//As well/indeed
+		{
+			$suffixes = "kin ".$suffeixes;
+			$message = substrToStrpos($message, "tiel");		
+		}
+		$message = preg_replace('/[0] =>/', '', $message);
+//------------------------------------------RANK 1 MODIFICATIONS: CLAUSE CLASSIFICATION-----------------------------------------------------------------------------------------------
+		//Find tense/time
+		$presentprefix = 0;//Default value is 0, if there is a "tenpo ni la" the tense stays 0 but a "now" needs to be added
+		if(preg_match('/tenpo .+ la/', $message))
+		{
+			$clauseinfo[0] = 0;
+			//Past
+			if(preg_match('/pasinteco/i', "tenpo pini", $message))//General past
+				$clauseinfo[0] = -1;
+			if(preg_match('/hieraŭ/i', "tenpo suno pini la", $message))//Yesterday
+				$clauseinfo[0] = -.3;
+			if(preg_match('/lasta nokto/', "tenpo pimeja pini la", $message))//Last night
+				$clauseinfo[0] = -.25;			
+			if(preg_match('/ĵus/', "tenpo pini lili la", $message))//Recently
+				$clauseinfo[0] =  -0.1;
+			//Future
+			if(preg_match('/baldaŭ/', "tenpo kama lili la", $message))//Soon
+				$clauseinfo[0] =  0.1;
+			if(preg_match('/ĉinokte/', "tenpo pimeja ni la", $message))//Tonight
+				$clauseinfo[0] =  0.25;
+			if(preg_match('/morgaŭ nokto/', "tenpo pimeja kama la", $message))//Tonight (alt)
+				$clauseinfo[0] =  0.35;
+			if(preg_match('/morgaŭ/', "tenpo suno kama la", $message))//Tomorrow
+				$clauseinfo[0] = .3;
+			if(preg_match('//', "tenpo pini kama la", $message))//Future perfect?
+				$clauseinfo[0] = .5;
+			if(preg_match('/estonteco/', "tenpo kama", $message))//General future
+				$clauseinfo[0] = 1;
+			//Present
+			if(preg_replace('/hodiaŭ/i', "tenpo suno ni la", $message))//Future today
+				$clauseinfo[0] =  0.2;
+			if(preg_match('/tenpo ni la/', $message))//Now
+			{
+				$presentprefix = 1;
+				$clauseinfo[0] = 0;
+			}
+			//Exception cases
+			if(preg_replace('/mallongtempe/i', "tenpo lili la", $message))//For a long time
+				$clauseinfo[0] = 2;
+			if(preg_replace('/longtempe/i', "tenpo suli la", $message))//For a short time
+				$clauseinfo[0] = -2;
+			//Others can be added, this covers all the basic ones
+			//Can be improved with looking at verb tenses to determine tkp tense prefix
+		}
+		//Find voice/mood?
+//-----------------------------------------RANK 2 MODIFICATIONS: PART OF SPEECH IDENTIFICATION--------------------------------------------------------
+		$messagewords = explode(" ", $message);
+		//Subject + Adjectives
+		$firstword = $messagewords[0];
+		$subject = "";
+		$subjectwords = explode(" ", $subject);
+		$partsofspeech[0] = "nou";
+		for($x = 1; $x<sizeof($subjectwords); $x++)
+		{
+			$partsofspeech[$x] = "adj";
+		}
+		//Verb + Adverbs
+		$verb = "";
+		$verbwords = explode(" ", $verb);
+		$partsofspeech[0] = "ver";
+		$partsofspeech[0] = "adv";
+		//Object + Adjectives
+		$object = "";
+		$objectwords = explode(" ", $object);
+		$partsofspeech[0] = "oth";
+		$partsofspeech[0] = "nou";
+		$partsofspeech[0] = "adj";
+//-----------------------------------------RANK 2 MODIFICATIONS: COMMON COMPOUND WORDS---------------------------------------------------------------
+		//do this at some point
+//-------------------------------------------RANK 2 MODIFICATIONS: LITERAL WORD REPLACEMENT AND P.O.S. ADDITION--------------------------------------
+		//Look for synonyms of epo words
 		$file = fopen("dictionaries/tkpepodict.txt", "r");
 		$dictwords = explode("\n", fread($file, filesize("dictionaries/tkpepodict.txt")));
 		$new = "";
@@ -584,6 +948,7 @@
 					$msgword=substr($msgword, 0, strlen($msgword)-1);
 				}
 				$wordIsTranslatable = false;
+				//"http://www.thesaurus.com/browse/word?s=t"
 				foreach($dictwords as &$dictword)
 				{
 					if(strpos($dictword, $msgword.":")==1)  						//If in the tkpepo dictionary
@@ -659,7 +1024,6 @@
 		}
 		return $prefixes.$new.$suffixes;
 	}
-
 	function ilaepo($message, $pr)
 	{
 		$original = $message;
@@ -707,15 +1071,15 @@
 		return $output;
 	}
 
-	function epotkp($message, $pr)
-	{
-		$original = $message;
-		if($pr)
-		{
-			echo $message;
-		}
-		return $message;
-	}
+	// function epotkp($message, $pr)
+	// {
+	// 	$original = $message;
+	// 	if($pr)
+	// 	{
+	// 		echo $message;
+	// 	}
+	// 	return $message;
+	// }
 
 	//Natural languages
 	function eponat($message, $pr)
@@ -748,7 +1112,10 @@
 	{
 		connat(detectLanguage($message), $message, $pr);
 	}
-
+	function natnat($message, $pr)
+	{
+		echo "<script type='text/javascript'>translateNat(\"".$message."\");</script>";
+	}
 	//Esperanto transitions
 	function tkpido($message, $pr)
 	{

@@ -8,6 +8,7 @@
  ante:malsam-
  anu:aŭ
  awen:rest-
+ e:kaj
  en:kaj
  esun:butik-
  ijo:aĵ-
@@ -42,6 +43,7 @@
  *alt*lawa:-estr-
  len:vest-
  lete:malvarm-
+ li:kaj
  lili:malgrand-
  linja:lini-
  lipu:plat-
