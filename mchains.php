@@ -1,23 +1,3 @@
-<?php
-require 'markov.php';
-
-if (isset($_POST['submit']))
-{
-	$order  = $_REQUEST['order'];
-	$length = $_REQUEST['length'];
-	$input  = $_REQUEST['input'];
-	$first = $_REQUEST['first'];
-	$text = $_REQUEST['text'];
-	if(isset($input))
-	{
-		$markov_table = createTable($input, $order, $text);
-		$markov = createText($first, $length, $markov_table, $order, $text);
-		if (get_magic_quotes_gpc())
-			$markov = stripslashes($markov);
-	}
-}
-?>
-
 <html>
 <head>
 	<title>Conlang Text Generator</title>
@@ -25,6 +5,25 @@ if (isset($_POST['submit']))
 	<link rel="stylesheet" href="css/skeleton.css" type="text/css">
 	<link rel="icon" href="css/favicon.ico">
 	<meta charset="utf-8">
+	<?php
+	require 'markov.php';
+
+	if (isset($_POST['submit']))
+	{
+		$order  = $_REQUEST['order'];
+		$length = $_REQUEST['length'];
+		$input  = $_REQUEST['input'];
+		$first = $_REQUEST['first'];
+		$text = $_REQUEST['text'];
+		if(isset($input))
+		{
+			$markov_table = createTable($input, $order, $text);
+			$markov = createText($first, $length, $markov_table, $order, $text);
+			if (get_magic_quotes_gpc())
+				$markov = stripslashes($markov);
+		}
+	}
+	?>
 </head>
 <body style="background-color:#330033;">
 	
