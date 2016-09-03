@@ -1,23 +1,3 @@
-<?php
-require 'markov.php';
-
-if (isset($_POST['submit']))
-{
-	$order  = $_REQUEST['order'];
-	$length = $_REQUEST['length'];
-	$input  = $_REQUEST['input'];
-	$first = $_REQUEST['first'];
-	$text = $_REQUEST['text'];
-	if(isset($input))
-	{
-		$markov_table = createTable($input, $order, $text);
-		$markov = createText($first, $length, $markov_table, $order, $text);
-		if (get_magic_quotes_gpc())
-			$markov = stripslashes($markov);
-	}
-}
-?>
-
 <html>
 <head>
 	<title>Conlang Text Generator</title>
@@ -25,12 +5,30 @@ if (isset($_POST['submit']))
 	<link rel="stylesheet" href="css/skeleton.css" type="text/css">
 	<link rel="icon" href="css/favicon.ico">
 	<meta charset="utf-8">
+	<?php
+	require 'markov.php';
+
+	if (isset($_POST['submit']))
+	{
+		$order  = $_REQUEST['order'];
+		$length = $_REQUEST['length'];
+		$input  = $_REQUEST['input'];
+		$first = $_REQUEST['first'];
+		$text = $_REQUEST['text'];
+		if(isset($input))
+		{
+			$markov_table = createTable($input, $order, $text);
+			$markov = createText($first, $length, $markov_table, $order, $text);
+			if (get_magic_quotes_gpc())
+				$markov = stripslashes($markov);
+		}
+	}
+	?>
 </head>
-<body style="background-color:#330033;">
-	
-	<div id="header" class="greybox container" style="background-image:url('images/conlang.png'); background-size: 100% 100%; border-color:#D67A0A">
-		<h1><b>Conlang Text Generator<b></h1><br><br><br><br><br><br><br><br>
-		<h2 style="text-align:center;color:#ffad33;">Created by Marcus Alder</h2>
+<body>
+	<div id="header" class="greybox container"> <!-- background-image:url('images/conlang.png'); background-size: 100% 100%-->
+		<h1><b>Conlang Text Generator<b></h1><br>
+		<h2>Created by Marcus Alder</h2>
 	</div>
 	<br>
 	
@@ -122,7 +120,7 @@ if (isset($_POST['submit']))
 			<br><br>Seed     -- The first characters of the output, which the generator will procede from.
 			<br><br>Text	 -- Choose a text to generate text with, an alternative to custom input. This may be slow due to the large corpus size.
 		</p><br><br>
-		<div id="google_translate_element">Translate this page to another language:</div>
+		<div id="google_translate_element"><p>Translate this page to another language:</p></div>
 		<script type="text/javascript">
 			function googleTranslateElementInit()
 			{
